@@ -3,7 +3,7 @@
     <el-dropdown trigger="click">
       <div class="flex items-center el-dropdown-link cursor-pointer">
         <img class="w-[50px] mr-[5px]" src="../assets/user.png" alt="" />
-        <h3 class="text-white">Danylo</h3>
+        <h3 class="text-white">{{ getCurrentUser }}</h3>
         <el-icon class="el-icon--right">
           <arrow-down />
         </el-icon>
@@ -40,6 +40,7 @@ import {
 import { useToast } from "vue-toastification";
 import router from "../router/router";
 import { toastOptions } from "../toast/toastOptions";
+import { computed } from "@vue/reactivity";
 const toast = useToast();
 const isLoggedIn = ref(false);
 let auth = getAuth();
@@ -50,6 +51,12 @@ const handleSignOut = () => {
     router.push({ name: "login" });
   });
 };
+
+const getCurrentUser = computed(() => {
+  if (auth.currentUser) {
+    return auth.currentUser.email;
+  }
+});
 
 onMounted(() => {
   onAuthStateChanged(auth, (user) => {

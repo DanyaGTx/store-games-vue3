@@ -29,7 +29,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed, onMounted } from "vue";
+
+import { getAuth } from "@firebase/auth";
 
 import BasketComponent from "./BasketComponent.vue";
 import ProfileMenuComponent from "./ProfileMenuComponent.vue";

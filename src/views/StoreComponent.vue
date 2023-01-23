@@ -96,16 +96,20 @@ watch(currentPage, (newPage) => {
   fetchGames(newPage);
 });
 
+// const getCurrentUser = computed(() => {
+//   const user = getAuth().currentUser;
+//   if (user) {
+//     return user.email;
+//   } else {
+//     return "human";
+//   }
+// }
+const user = getAuth().currentUser;
 onMounted(async () => {
-  const user = getAuth().currentUser;
-  if (user) {
-    console.log("!!!!!!!!!!!!users");
-    console.log(user.email);
-  } else {
-    // user is signed out, show sign-in form
-    console.log("no users");
-  }
   try {
+    if (user?.email) {
+      console.log(user.email);
+    }
     isLoading.value = true;
     await fetchGames(currentPage.value);
     isLoading.value = false;

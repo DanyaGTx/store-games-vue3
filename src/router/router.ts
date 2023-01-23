@@ -59,10 +59,11 @@ router.beforeEach(async (to,from, next) => {
 
 const getCurrentUser = () => {
   return new Promise((resolve,reject) => {
-    const removeListener = onAuthStateChanged(getAuth(),(user ) => {
+    const removeListener = onAuthStateChanged(getAuth(),(user) => {
        removeListener();
        resolve(user)
-      },reject)
+      },
+      reject)
   })
 }
 
