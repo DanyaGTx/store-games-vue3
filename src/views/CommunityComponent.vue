@@ -1,5 +1,7 @@
 <template>
-  <div>Community</div>
+  <div>
+    <div>asdasdasdsa asdasdsa</div>
+  </div>
 </template>
 
 <script setup lang="ts"></script>

@@ -1,11 +1,13 @@
 <template>
   <div
-    class="min-w-[180px] max-w-[280px] h-[350px] bg-[#49537d] rounded-lg flex flex-col justify-between"
+    class="min-w-[180px] max-w-[280px] h-[350px] bg-[#49537d] rounded-lg flex flex-col justify-between cursor-pointer max-[500px]:h-[300px]"
   >
     <div class="p-[10px]">
       <div>
         <img
-          class="w-full max-h-[150px] rounded-lg"
+          @load="imageLoading(game.background_image)"
+          class="w-full max-h-[150px] rounded-lg fade-in-image"
+          :class="imageClass"
           :src="game.background_image"
           alt=""
         />
@@ -13,19 +15,34 @@
         <span>Rating: {{ game.rating }}</span>
       </div>
     </div>
-    <div class="text-right m-[20px]">
-      <el-button @click="addGameToCart(game)" type="success"
+    <div @click.stop class="text-right m-[20px]">
+      <el-button
+        v-if="!isInBasket"
+        @click="addGameToCart(game.id)"
+        type="success"
         >Add to cart</el-button
+      >
+      <el-button v-else @click="deleteGameFromCart(game.id)" type="info" plain
+        >Delete from cart</el-button
       >
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useGamesStore } from "../stores/games";
+import { Loading } from "@element-plus/icons-vue";
+import { computed, onMounted, ref } from "vue";
 
-defineProps<{
+import { useRouter, useRoute } from "vue-router";
+
+import { useGamesStoreBasket } from "../stores/gamesBasket";
+
+const route = useRoute();
+const router = useRouter();
+
+const props = defineProps<{
   game: GAME;
+  isLoading: boolean;
 }>();
 
 interface GAME {
@@ -35,11 +52,37 @@ interface GAME {
   background_image: string;
 }
 
-const gamesStore = useGamesStore();
+const gamesStoreBasket = useGamesStoreBasket();
 
-const addGameToCart = (game: GAME) => {
-  gamesStore.addGame(game);
+const addGameToCart = (id: number) => {
+  gamesStoreBasket.addGame(id);
 };
+
+const deleteGameFromCart = (id: number) => {
+  gamesStoreBasket.deleteGame(id);
+};
+
+const imageClass = ref("fade-in-image");
+const imageLoading = (img: string) => {
+  const image = new Image();
+  image.src = img;
+  image.onload = () => {
+    imageClass.value = "fade-in-image is-loaded";
+  };
+};
+
+const isInBasket = computed(() => {
+  return gamesStoreBasket.gamesBasket.find((game) => game.id === props.game.id);
+});
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.fade-in-image {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.fade-in-image.is-loaded {
+  opacity: 1;
+}
+</style>

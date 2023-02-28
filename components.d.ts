@@ -43,11 +43,13 @@ declare module '@vue/runtime-core' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTimePicker: typeof import('element-plus/es')['ElTimePicker']
     GameCard: typeof import('./src/components/GameCard.vue')['default']
+    GameCardDetails: typeof import('./src/components/GameCardDetails.vue')['default']
     HeaderUI: typeof import('./src/components/HeaderUI.vue')['default']
     MainUI: typeof import('./src/components/MainUI.vue')['default']
     ProfileMenuComponent: typeof import('./src/components/ProfileMenuComponent.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SearchComponent: typeof import('./src/components/SearchComponent.vue')['default']
     SidebarUI: typeof import('./src/components/SidebarUI.vue')['default']
   }
   export interface ComponentCustomProperties {

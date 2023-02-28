@@ -3,13 +3,16 @@
     <h1 class="text-[30px] text-white mb-[20px]">Games</h1>
     <div v-if="!isLoading && !isError">
       <div
-        class="grid gap-4 grid-cols-3 max-[1000px]:grid-cols-2 max-[750px]:grid-cols-1"
+        class="grid gap-4 grid-cols-4 max-[1300px]:grid-cols-3 max-[1100px]:grid-cols-2 max-[750px]:grid-cols-1"
       >
         <game-card
-          v-for="game in games"
+          @click="openCardDetails(game.id)"
+          v-for="game in allGamesStore.allGames"
           :key="game.id"
           :game="game"
-        ></game-card>
+          :isLoading="isLoading"
+        >
+        </game-card>
       </div>
       <div class="mt-[30px]">
         <el-pagination
@@ -31,20 +34,25 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch, computed } from "vue";
-
+import { useRouter, useRoute } from "vue-router";
 import { ElPagination } from "element-plus";
+//@ts-ignore
+import debounce from "lodash.debounce";
 
 import GameCard from "../components/GameCard.vue";
 import { useWindowSize } from "@vueuse/core";
 
-import { api } from "../api/api.js";
-
+import { useAllGamesStore } from "../stores/allGames";
 import { useToast } from "vue-toastification";
 
 import { toastOptions } from "../toast/toastOptions";
 import { getAuth } from "@firebase/auth";
 
 const toast = useToast();
+
+const router = useRouter();
+
+const allGamesStore = useAllGamesStore();
 
 const { width } = useWindowSize();
 
@@ -54,6 +62,9 @@ interface GAME {
   rating: number;
   background_image: string;
 }
+const props = defineProps<{
+  searchQuery: string;
+}>();
 
 const games = ref<GAME[]>([]);
 const isLoading = ref(false);
@@ -61,10 +72,17 @@ const isError = ref(false);
 const currentPage = ref(1);
 
 const setCurrentPage = (page: number) => {
+  isLoading.value = true;
   currentPage.value = page;
   window.scrollTo({
     top: 0,
-    behavior: "smooth",
+  });
+};
+
+const openCardDetails = (id: number) => {
+  router.push({
+    name: "game-details",
+    params: { id },
   });
 };
 
@@ -86,24 +104,23 @@ const calculatedSizePagerCount = computed(() => {
   }
 });
 
-const fetchGames = async (page: number) => {
-  const { data } = await api.games.getGames(page);
-
-  games.value = data.results;
+const fetchGamesWithSearch = async (page: number, searchQuery: string) => {
+  await allGamesStore.getGamesBySearch(page, searchQuery);
+  isLoading.value = false;
 };
 
 watch(currentPage, (newPage) => {
-  fetchGames(newPage);
+  fetchGamesWithSearch(currentPage.value, props.searchQuery);
 });
 
-// const getCurrentUser = computed(() => {
-//   const user = getAuth().currentUser;
-//   if (user) {
-//     return user.email;
-//   } else {
-//     return "human";
-//   }
-// }
+watch(
+  () => props.searchQuery,
+  debounce(async (searchQuery: string) => {
+    setCurrentPage(1);
+    await fetchGamesWithSearch(currentPage.value, searchQuery);
+  }, 1000)
+);
+
 const user = getAuth().currentUser;
 onMounted(async () => {
   try {
@@ -111,7 +128,9 @@ onMounted(async () => {
       console.log(user.email);
     }
     isLoading.value = true;
-    await fetchGames(currentPage.value);
+
+    await fetchGamesWithSearch(currentPage.value, props.searchQuery);
+
     isLoading.value = false;
   } catch (error) {
     isError.value = true;
@@ -123,4 +142,4 @@ onMounted(async () => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped></style>

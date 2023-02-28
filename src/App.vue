@@ -6,7 +6,8 @@
 
 <style>
 body {
-  background-color: rgb(216, 193, 193);
+  background-color: #252836;
+  /* padding: 10px; */
 }
 ::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */

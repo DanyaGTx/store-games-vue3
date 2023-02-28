@@ -1,43 +1,52 @@
 <template>
   <div
-    class="flex justify-center items-center h-[500px] max-w-[500px] bg-[#ffffff] mt-[100px] m-auto rounded-2xl"
+    class="flex justify-center items-center h-[500px] max-w-[500px] bg-[#ffffff] mt-[100px] rounded-2xl relative m-auto p-[20px]"
   >
+    <div
+      class="max-[420px]:text-[25px] text-[30px] text-center absolute top-[10%] left-[50%] translate-x-[-50%]"
+    >
+      Login
+    </div>
     <el-form
       ref="ruleFormRef"
       :model="login"
       :rules="rules"
-      label-width="120px"
-      class="mr-[70px] w-full"
+      class="max-w-[400px] mt-[50px] w-full"
+      label-width="50px"
       status-icon
     >
-      <el-form-item label="Email" prop="email">
+      <el-form-item label="Email" class="pl-[20px]" prop="email">
         <el-input type="email" v-model="login.email" />
       </el-form-item>
-      <el-form-item label="Password" prop="password">
+
+      <el-form-item label="Password" class="pl-[20px]" prop="password">
         <el-input type="password" v-model="login.password" />
       </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="signIn(ruleFormRef)">
-          Login
-        </el-button>
-        <el-button @click="resetForm(ruleFormRef)">Reset</el-button>
-      </el-form-item>
-      <el-form-item>
-        <h3
-          class="mt-[-10px] text-[13px] text-right cursor-pointer text-blue-900"
-          @click="signInWithGoogle"
-        >
-          Login with Google
-        </h3>
-      </el-form-item>
-      <el-form-item>
-        <h3
-          @click="$router.push({ name: 'register' })"
-          class="mt-[-10px] text-[13px] text-right cursor-pointer text-blue-900"
-        >
-          Dont not have an account?
-        </h3>
-      </el-form-item>
+
+      <div class="ml-[20px]">
+        <el-form-item class="mt-[30px]">
+          <el-button type="primary" @click="signIn(ruleFormRef)">
+            Login
+          </el-button>
+          <el-button @click="resetForm(ruleFormRef)">Reset</el-button>
+        </el-form-item>
+        <el-form-item>
+          <h3
+            class="mt-[-10px] text-[13px] text-right cursor-pointer text-blue-900"
+            @click="signInWithGoogle"
+          >
+            Login with Google
+          </h3>
+        </el-form-item>
+        <el-form-item>
+          <h3
+            @click="$router.push({ name: 'register' })"
+            class="mt-[-10px] text-[13px] text-right cursor-pointer text-blue-900"
+          >
+            Dont not have an account?
+          </h3>
+        </el-form-item>
+      </div>
     </el-form>
   </div>
 </template>

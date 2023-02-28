@@ -1,11 +1,17 @@
-import { createRouter, createWebHistory, routerKey } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
 import StoreComponent from "../views/StoreComponent.vue";
 import CommunityComponent from "../views/CommunityComponent.vue";
 import MainUIVue from "../components/MainUI.vue";
+import RegisterComponent from "../views/RegisterComponent.vue";
 import LoginComponent from '../views/LoginComponent.vue'
-import RegisterComponent from '../views/RegisterComponent.vue'
+import SettingsComponent from "../views/SettingsComponent.vue";
+import GameCardDetails from "../components/GameCardDetails.vue";
 import { getAuth,onAuthStateChanged } from 'firebase/auth'
+import { useToast } from "vue-toastification";
+import { toastOptions } from "../toast/toastOptions";
+
+const toast = useToast();
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -18,16 +24,18 @@ const router = createRouter({
       },
       component: MainUIVue,
       children: [{ path: "", name: "route.store", component: StoreComponent }],
-    
     },
     {
       path: `/community`,
       name: "community",
+      redirect: {
+        name: 'route.community'
+      },
       component: MainUIVue,
       meta: {
         requiresAuth: true
       },
-      children: [{ path: "", name: "community", component: CommunityComponent }],
+      children: [{ path: "", name: "route.community", component: CommunityComponent }],
     },
     {
       path: `/login`,
@@ -39,6 +47,30 @@ const router = createRouter({
       name: "register",
       component: RegisterComponent,
     },
+    {
+      path: `/settings`,
+      name: "settings",
+      redirect: {
+        name: 'route.settings'
+      },
+      component: MainUIVue,
+      meta: {
+        requiresAuth: true
+      },
+      children: [{ path: "", name: "route.settings", component: SettingsComponent }],
+    },
+    {
+      path: `/store/card/:id`,
+      name: "game-details",
+      redirect: {
+        name: 'route.game-details'
+      },
+      component: MainUIVue,
+      meta: {
+        requiresAuth: true
+      },
+      children: [{ path: "", name: "route.game-details", component: GameCardDetails }],
+    },
   ],
 });
 
@@ -49,7 +81,7 @@ router.beforeEach(async (to,from, next) => {
     if(await getCurrentUser()) {
       next();
     } else {
-        alert('you must be logged in');
+        toast("You must be logged in", toastOptions);
         next('/')
     } 
   } else {

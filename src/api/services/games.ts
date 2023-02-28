@@ -1,9 +1,12 @@
 import { AxiosInstance } from "axios";
 
 export default (api: AxiosInstance) => ({
-    getGames: (page:number) =>
+    getGamesWithSearch: (page:number,search:string) =>
       api.get(
-        `/games?page=${page}&page_size=10`
+        `/games?page=${page}&search=${search}&page_size=20`
       ),
-  })
-  
+    getGameById: (id: number) =>
+      api.get(
+        `/games/${id}`
+      ),
+    })

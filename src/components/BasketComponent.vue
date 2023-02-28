@@ -17,7 +17,7 @@
           <div class="w-[200px] min-h-[150px] pr-[10px]">
             <template v-if="calculatedGamesAmount">
               <div
-                v-for="game in gamesStore.gameList"
+                v-for="game in gamesStore.gamesBasket"
                 class="border-2 border-red-400 flex gap-2 justify-between items-center p-[10px] ml-[10px] mb-[10px]"
               >
                 <div>
@@ -51,12 +51,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { ElDropdown, ElDropdownMenu } from "element-plus";
-import { useGamesStore } from "../stores/games";
+import { useGamesStoreBasket } from "../stores/gamesBasket";
 
-const gamesStore = useGamesStore();
+const gamesStore = useGamesStoreBasket();
 
 const calculatedGamesAmount = computed(() => {
-  return gamesStore.gameList.length;
+  return gamesStore.gamesBasket.length;
 });
 
 const deleteGame = (id: number) => {

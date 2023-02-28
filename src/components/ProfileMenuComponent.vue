@@ -2,7 +2,15 @@
   <div v-if="isLoggedIn">
     <el-dropdown trigger="click">
       <div class="flex items-center el-dropdown-link cursor-pointer">
-        <img class="w-[50px] mr-[5px]" src="../assets/user.png" alt="" />
+        <!-- <img class="w-[50px] mr-[5px]" src="../assets/user.png" alt="" /> -->
+        <div class="mr-[10px] w-[50px] h-[50px]">
+          <img
+            class="w-full h-full object-cover rounded-[50%]"
+            :src="userDataStore.getUserProfileAvatar"
+            alt=""
+          />
+        </div>
+
         <h3 class="text-white">{{ getCurrentUser }}</h3>
         <el-icon class="el-icon--right">
           <arrow-down />
@@ -10,8 +18,9 @@
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item>Login</el-dropdown-item>
-          <el-dropdown-item>Settings</el-dropdown-item>
+          <el-dropdown-item @click="$router.push({ name: 'settings' })"
+            >Profile</el-dropdown-item
+          >
           <el-dropdown-item @click="handleSignOut">Logout</el-dropdown-item>
         </el-dropdown-menu>
       </template>
@@ -41,6 +50,10 @@ import { useToast } from "vue-toastification";
 import router from "../router/router";
 import { toastOptions } from "../toast/toastOptions";
 import { computed } from "@vue/reactivity";
+
+import { useUserDataStore } from "../stores/userData";
+const userDataStore = useUserDataStore();
+
 const toast = useToast();
 const isLoggedIn = ref(false);
 let auth = getAuth();

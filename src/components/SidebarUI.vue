@@ -2,7 +2,7 @@
   <div
     class="min-h-[650px] min-w-[250px] max-[850px]:min-w-[200px] max-[550px]:min-w-[150px] max-[500px]:min-w-[100px] max-[400px]:min-w-[70px] font-popins text-[#808191]"
   >
-    <div class="min-[501px]:hidden sticky top-[160px]">
+    <div class="min-[501px]:hidden sticky top-[160px] pl-[10px]">
       <h3 class="font-semibold mb-[20px]">MENU</h3>
       <nav class="flex flex-col gap-10">
         <div class="flex items-center">
@@ -28,7 +28,9 @@
       </nav>
     </div>
 
-    <div class="max-[500px]:hidden max-w-[470px]:bg-red sticky top-[150px]">
+    <div
+      class="max-[500px]:hidden max-w-[470px]:bg-red sticky top-[150px] pl-[10px]"
+    >
       <h3 class="font-semibold min-[500px]:mb-[20px]">MENU</h3>
       <nav class="flex flex-col gap-10">
         <div class="flex items-center">
