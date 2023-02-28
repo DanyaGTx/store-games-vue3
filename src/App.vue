@@ -2,7 +2,25 @@
   <router-view></router-view>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted } from "vue";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useUserDataStore } from "./stores/userData";
+const userDataStore = useUserDataStore();
+const auth = getAuth();
+onMounted(async () => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("User is logged in", user);
+      if (user.displayName && user.photoURL) {
+        userDataStore.setUserProfileAvatar(user.photoURL);
+      }
+    } else {
+      console.log("User is logged out");
+    }
+  });
+});
+</script>
 
 <style>
 body {
