@@ -12,7 +12,7 @@
     <div class="mr-[100px] max-[600px]:mt-[10px]">
       <div class="flex items-center">
         <BasketComponent />
-        <ProfileMenuComponent />
+        <HeaderMenuComponent />
       </div>
     </div>
   </div>
@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import BasketComponent from "./BasketComponent.vue";
-import ProfileMenuComponent from "./ProfileMenuComponent.vue";
+import HeaderMenuComponent from "./HeaderMenuComponent.vue";
 import SearchComponent from "./SearchComponent.vue";
 
 const emit = defineEmits<{

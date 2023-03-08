@@ -61,6 +61,11 @@ import {
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
+
+import { db } from "../firebase/firebase";
+
+import { collection, addDoc } from "firebase/firestore";
+
 import { useToast } from "vue-toastification";
 
 import { toastOptions } from "../toast/toastOptions";
@@ -116,8 +121,11 @@ const signUp = async (formEl: FormInstance | undefined) => {
       )
         .then((data) => {
           console.log(data);
+
           toast.success("account has been registered", toastOptions);
           router.push({ name: "store" });
+          // TODO create account in databse
+          // createAccountInDatabase();
         })
         .catch((error) => {
           toast.error("Error: " + error, toastOptions);
@@ -138,6 +146,19 @@ const signInWithGoogle = () => {
     .catch((error) => {
       toast.error("Error: " + error, toastOptions);
     });
+};
+
+const createAccountInDatabase = async () => {
+  try {
+    const docRef = await addDoc(collection(db, "users"), {
+      first: "Ada",
+      last: "Lovelace",
+      born: 1815,
+    });
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
 };
 
 const resetForm = (formEl: FormInstance | undefined) => {

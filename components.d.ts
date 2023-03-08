@@ -44,6 +44,8 @@ declare module '@vue/runtime-core' {
     ElTimePicker: typeof import('element-plus/es')['ElTimePicker']
     GameCard: typeof import('./src/components/GameCard.vue')['default']
     GameCardDetails: typeof import('./src/components/GameCardDetails.vue')['default']
+    HeaderComponent: typeof import('./src/components/HeaderComponent.vue')['default']
+    HeaderMenuComponent: typeof import('./src/components/HeaderMenuComponent.vue')['default']
     HeaderUI: typeof import('./src/components/HeaderUI.vue')['default']
     MainUI: typeof import('./src/components/MainUI.vue')['default']
     ProfileMenuComponent: typeof import('./src/components/ProfileMenuComponent.vue')['default']

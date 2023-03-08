@@ -5,7 +5,7 @@ import CommunityComponent from "../views/CommunityComponent.vue";
 import MainUIVue from "../components/MainUI.vue";
 import RegisterComponent from "../views/RegisterComponent.vue";
 import LoginComponent from '../views/LoginComponent.vue'
-import SettingsComponent from "../views/SettingsComponent.vue";
+import SettingsComponent from "../views/ProfileComponent.vue";
 import GameCardDetails from "../components/GameCardDetails.vue";
 import { getAuth,onAuthStateChanged } from 'firebase/auth'
 import { useToast } from "vue-toastification";

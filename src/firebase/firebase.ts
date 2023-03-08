@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
-
+import { getFirestore } from "firebase/firestore";
+import 'firebase/firestore';
 const firebaseConfig = {
     apiKey: "AIzaSyDejbB3Du5N_Q9_e9ldb2YR45LbZsEsZPs",
     authDomain: "gamesstorevue3.firebaseapp.com",
@@ -14,4 +15,7 @@ const initializeFirebase = () => {
     initializeApp(firebaseConfig)
 }
 
-export { initializeFirebase }
+const db = getFirestore(initializeApp(firebaseConfig));
+
+
+export { initializeFirebase, db }

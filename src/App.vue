@@ -12,8 +12,11 @@ onMounted(async () => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       console.log("User is logged in", user);
+
       if (user.displayName && user.photoURL) {
         userDataStore.setUserProfileAvatar(user.photoURL);
+      } else {
+        userDataStore.setUserProfileAvatar("");
       }
     } else {
       console.log("User is logged out");

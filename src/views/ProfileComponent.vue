@@ -4,6 +4,7 @@
       <el-button @click="$router.go(-1)" class="mb-[20px]">Back</el-button>
       <h2>Profile</h2>
       <div>
+        <h3>Your email: {{ getCurrentEmail }}</h3>
         <h3 v-if="displayName">Your name: {{ displayName }}</h3>
         <div>
           <el-button
@@ -28,10 +29,12 @@
     </div>
 
     <div class="mt-[50px]">
-      <div
+      <img
+        width="200"
         v-if="!userDataStore.getUserProfileAvatar"
-        class="w-[250px] h-[250px] bg-red-600"
-      ></div>
+        src="../assets/user.png"
+        alt=""
+      />
       <img
         v-else
         :src="userDataStore.getUserProfileAvatar"
@@ -44,7 +47,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import {
   getStorage,
   ref as storageRef,
@@ -65,6 +68,7 @@ const toast = useToast();
 const userName = ref();
 const displayName = ref();
 const isChangeNameActive = ref(false);
+
 const uploadImage = (e: any) => {
   const storage = getStorage();
   if (e.target.files && e.target.files.length > 0) {
@@ -97,8 +101,6 @@ const uploadImage = (e: any) => {
         toast.error("Error: " + error, toastOptions);
       },
       () => {
-        // Handle successful uploads on complete
-        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setUserAvatar(downloadURL);
           console.log("NEW File available at", downloadURL);
@@ -120,6 +122,7 @@ const setUserName = () => {
           toastOptions
         );
         displayName.value = user.displayName;
+        userDataStore.setUserProfileName(displayName.value);
         isChangeNameActive.value = false;
         if (user.photoURL) {
           userDataStore.setUserProfileAvatar(user.photoURL);
@@ -139,7 +142,6 @@ const setUserAvatar = (url: string) => {
       .then(() => {
         toast.success("Your image was successfully loaded", toastOptions);
         if (user.photoURL) {
-          console.log("NEW PHOTO", user.photoURL);
           userDataStore.setUserProfileAvatar(user.photoURL);
         }
       })
@@ -149,9 +151,15 @@ const setUserAvatar = (url: string) => {
   }
 };
 const loadUserData = (name: string, image: string) => {
-  displayName.value = name;
+  userDataStore.setUserProfileName(name);
   userDataStore.setUserProfileAvatar(image);
 };
+
+const getCurrentEmail = computed(() => {
+  if (auth.currentUser) {
+    return auth.currentUser.email;
+  }
+});
 
 onMounted(async () => {
   const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -161,7 +169,6 @@ onMounted(async () => {
       if (user.displayName && user.photoURL) {
         loadUserData(user?.displayName, user?.photoURL);
       }
-      //   console.log(user.photoURL);
     } else {
       // User is logged out
       console.log("User is logged out");
