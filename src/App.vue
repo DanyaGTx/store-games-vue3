@@ -6,14 +6,27 @@
 import { onMounted } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useUserDataStore } from "./stores/userData";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "./firebase/firebase";
+import { useGamesStoreBasket } from "./stores/gamesBasket";
 const userDataStore = useUserDataStore();
+
+const gamesBasket = useGamesStoreBasket();
+
 const auth = getAuth();
+
+const loadCartGamesFromDatabase = async () => {
+  await gamesBasket.setGamesInCart();
+};
+
 onMounted(async () => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       console.log("User is logged in", user);
 
-      if (user.displayName && user.photoURL) {
+      loadCartGamesFromDatabase();
+
+      if (user.photoURL) {
         userDataStore.setUserProfileAvatar(user.photoURL);
       } else {
         userDataStore.setUserProfileAvatar("");

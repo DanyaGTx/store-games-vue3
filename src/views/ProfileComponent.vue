@@ -5,7 +5,10 @@
       <h2>Profile</h2>
       <div>
         <h3>Your email: {{ getCurrentEmail }}</h3>
-        <h3 v-if="displayName">Your name: {{ displayName }}</h3>
+        <h3 v-if="userDataStore.getUserProfileName">
+          Your name: {{ userDataStore.getUserProfileName }}
+        </h3>
+        <!-- ??? -->
         <div>
           <el-button
             type="success"
@@ -24,6 +27,9 @@
               <el-button @click="setUserName">Set Name</el-button>
             </div>
           </div>
+          <!-- <div>
+            <el-button @click="loadUserInCollection">Load User</el-button>
+          </div> -->
         </div>
       </div>
     </div>
@@ -60,9 +66,11 @@ import { ElButton } from "element-plus";
 import { useToast } from "vue-toastification";
 import { toastOptions } from "../toast/toastOptions";
 import { useUserDataStore } from "../stores/userData";
-
+import { useGamesStoreBasket } from "../stores/gamesBasket";
+import { collection, doc, setDoc, getDoc, getDocs } from "firebase/firestore";
+import { db } from "../firebase/firebase";
 const userDataStore = useUserDataStore();
-
+const gamesBasket = useGamesStoreBasket();
 const toast = useToast();
 
 const userName = ref();
@@ -124,6 +132,7 @@ const setUserName = () => {
         displayName.value = user.displayName;
         userDataStore.setUserProfileName(displayName.value);
         isChangeNameActive.value = false;
+        updateUserInfoInCollection();
         if (user.photoURL) {
           userDataStore.setUserProfileAvatar(user.photoURL);
         }
@@ -144,6 +153,7 @@ const setUserAvatar = (url: string) => {
         if (user.photoURL) {
           userDataStore.setUserProfileAvatar(user.photoURL);
         }
+        updateUserInfoInCollection();
       })
       .catch((error) => {
         toast.error("Error: " + error, toastOptions);
@@ -160,6 +170,17 @@ const getCurrentEmail = computed(() => {
     return auth.currentUser.email;
   }
 });
+
+const updateUserInfoInCollection = async () => {
+  const usersRef = collection(db, "users");
+
+  await setDoc(doc(usersRef, userDataStore.getUserProfileEmail), {
+    userDisplayName: userDataStore.getUserProfileName,
+    userEmail: userDataStore.getUserProfileEmail,
+    userAvatar: userDataStore.getUserProfileAvatar,
+    gamesInCart: gamesBasket.getAllGamesInCart,
+  });
+};
 
 onMounted(async () => {
   const unsubscribe = onAuthStateChanged(auth, (user) => {

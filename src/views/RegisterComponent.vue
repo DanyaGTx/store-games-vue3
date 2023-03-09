@@ -62,9 +62,9 @@ import {
   updateProfile,
 } from "firebase/auth";
 
+import { collection, doc, setDoc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../firebase/firebase";
-
-import { collection, addDoc } from "firebase/firestore";
+import { useUserDataStore } from "../stores/userData";
 
 import { useToast } from "vue-toastification";
 
@@ -75,6 +75,8 @@ import router from "../router/router";
 const ruleFormRef = ref<FormInstance>();
 
 const toast = useToast();
+
+const userDataStore = useUserDataStore();
 
 interface Register {
   email: string;
@@ -123,9 +125,8 @@ const signUp = async (formEl: FormInstance | undefined) => {
           console.log(data);
 
           toast.success("account has been registered", toastOptions);
+          createUserCollection();
           router.push({ name: "store" });
-          // TODO create account in databse
-          // createAccountInDatabase();
         })
         .catch((error) => {
           toast.error("Error: " + error, toastOptions);
@@ -133,6 +134,17 @@ const signUp = async (formEl: FormInstance | undefined) => {
     } else {
       console.log("error submit!", fields);
     }
+  });
+};
+
+const createUserCollection = async () => {
+  const usersRef = collection(db, "users");
+
+  await setDoc(doc(usersRef, userDataStore.getUserProfileEmail), {
+    userDisplayName: userDataStore.getUserProfileName,
+    userEmail: userDataStore.getUserProfileEmail,
+    userAvatar: userDataStore.getUserProfileAvatar,
+    gamesInCart: [],
   });
 };
 
@@ -146,19 +158,6 @@ const signInWithGoogle = () => {
     .catch((error) => {
       toast.error("Error: " + error, toastOptions);
     });
-};
-
-const createAccountInDatabase = async () => {
-  try {
-    const docRef = await addDoc(collection(db, "users"), {
-      first: "Ada",
-      last: "Lovelace",
-      born: 1815,
-    });
-    console.log("Document written with ID: ", docRef.id);
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
 };
 
 const resetForm = (formEl: FormInstance | undefined) => {

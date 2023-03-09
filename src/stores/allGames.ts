@@ -13,7 +13,7 @@ export const useAllGamesStore = defineStore('gamesList', {
           const { data } = await api.games.getGamesWithSearch(page,search);
           this.allGames = data.results;
           console.log('action', data.results);
-        }
+        },
     }
   })
 

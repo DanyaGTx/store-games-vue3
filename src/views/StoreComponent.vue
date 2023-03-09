@@ -43,6 +43,7 @@ import GameCard from "../components/GameCard.vue";
 import { useWindowSize } from "@vueuse/core";
 
 import { useAllGamesStore } from "../stores/allGames";
+import { useGamesStoreBasket } from "../stores/gamesBasket";
 import { useToast } from "vue-toastification";
 
 import { toastOptions } from "../toast/toastOptions";
@@ -53,7 +54,7 @@ const toast = useToast();
 const router = useRouter();
 
 const allGamesStore = useAllGamesStore();
-
+const gamesBasket = useGamesStoreBasket();
 const { width } = useWindowSize();
 
 interface GAME {
@@ -109,6 +110,10 @@ const fetchGamesWithSearch = async (page: number, searchQuery: string) => {
   isLoading.value = false;
 };
 
+// const loadCartGamesFromDatabase = async () => {
+//   await gamesBasket.setGamesInCart();
+// };
+
 watch(currentPage, (newPage) => {
   fetchGamesWithSearch(currentPage.value, props.searchQuery);
 });
@@ -130,7 +135,6 @@ onMounted(async () => {
     isLoading.value = true;
 
     await fetchGamesWithSearch(currentPage.value, props.searchQuery);
-
     isLoading.value = false;
   } catch (error) {
     isError.value = true;

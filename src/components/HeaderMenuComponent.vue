@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, ref, watch, getCurrentInstance } from "vue";
+import { onMounted, computed } from "vue";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { ArrowDown } from "@element-plus/icons-vue";
 import {
@@ -81,6 +81,7 @@ onMounted(() => {
   onAuthStateChanged(auth, async (user) => {
     if (user?.email) {
       userDataStore.setIsLoggedInUser(true);
+      userDataStore.setUserEmail(user.email);
       if (user?.displayName) {
         userDataStore.setUserProfileName(user.displayName);
       } else {
