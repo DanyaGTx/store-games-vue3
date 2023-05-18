@@ -110,10 +110,6 @@ const fetchGamesWithSearch = async (page: number, searchQuery: string) => {
   isLoading.value = false;
 };
 
-// const loadCartGamesFromDatabase = async () => {
-//   await gamesBasket.setGamesInCart();
-// };
-
 watch(currentPage, (newPage) => {
   fetchGamesWithSearch(currentPage.value, props.searchQuery);
 });

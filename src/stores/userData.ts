@@ -7,7 +7,7 @@ export const useUserDataStore = defineStore('userData', {
         userEmail: '',
         userProfileAvatar: '',
         userProfileName: '',
-        isLoggedIn: false
+        isLoggedIn: false,
       }
     },
 

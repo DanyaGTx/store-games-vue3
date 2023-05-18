@@ -8,7 +8,6 @@ import { toastOptions } from "../toast/toastOptions";
 
 import { collection, doc, setDoc, getDoc, updateDoc, deleteField } from "firebase/firestore";
 import { db } from "../firebase/firebase";
-// const userDataStore = useUserDataStore();
 
 const toast = useToast();
 
@@ -23,10 +22,6 @@ export const useGamesStoreBasket = defineStore('gamesBasket', {
     actions: {
       async addGame(id: number) {
         const { data } = await api.games.getGameById(id);
-
-      
-        console.log(data);
-
         const newGame = {
           id: data.id,
           name: data.name,
@@ -34,15 +29,8 @@ export const useGamesStoreBasket = defineStore('gamesBasket', {
         }
         if(auth.currentUser?.email) {
           this.gamesBasket.push(newGame)
-
-          // add games to firebase database
             const usersRef = collection(db, "users");
-            await setDoc(doc(usersRef, auth.currentUser.email), {  
-                email: auth.currentUser.email,
-                name: auth.currentUser.displayName,
-                avatar: auth.currentUser.photoURL,
-                gamesInCart: [...this.gamesBasket],
-            });
+            await updateDoc(doc(usersRef, auth.currentUser.email), {gamesInCart: [...this.gamesBasket]},)
           
         } else {
           toast("You must be logged in", toastOptions);
@@ -51,12 +39,8 @@ export const useGamesStoreBasket = defineStore('gamesBasket', {
       async deleteGame(id: number) {
         if(auth.currentUser?.email) {
           this.gamesBasket = this.gamesBasket.filter((game) => game.id !== id)
-          
           const usersRef = collection(db, "users");
-          await setDoc(doc(usersRef, auth.currentUser.email), {  
-              gamesInCart: [...this.gamesBasket],
-          });
-
+          await updateDoc(doc(usersRef, auth.currentUser.email), {gamesInCart: [...this.gamesBasket]},)
          } else {
           toast("You must be logged in", toastOptions);
         }

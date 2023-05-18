@@ -1,8 +1,44 @@
 <template>
   <div class="max-w-[1400px] m-auto mt-0 p-4">
+    <h2 class="text-[30px] text-white">Your Profile</h2>
+    <div
+      @mouseover="isImageChoosable = true"
+      @mouseleave="isImageChoosable = false"
+      class="max-w-[200px] h-[200px] mb-[50px] mt-[50px] relative"
+    >
+      <img
+        width="200"
+        v-if="!userDataStore.getUserProfileAvatar"
+        src="../assets/user.png"
+        alt=""
+      />
+      <img
+        v-else
+        class="rounded-[50%] transition-all ease-in-out delay-50 h-[200px] border border-red-100"
+        :class="{ 'blur-[2px]': isImageChoosable }"
+        :src="userDataStore.getUserProfileAvatar"
+        width="200"
+        alt=""
+      />
+      <div>
+        <label
+          for="files"
+          :class="{ unlockChoose: isImageChoosable }"
+          class="text-white text-[20px] w-full text-center cursor-pointer invisible opacity-0 transition-all ease-linear delay-50"
+        >
+          <!-- Change Image -->
+          <img
+            class="max-w-[60px] absolute top-[40%] left-[50%] translate-x-[-50%]"
+            src="../assets/photo-edit-icon.png"
+            alt="Change Image"
+            title="Change Image"
+          />
+        </label>
+        <input id="files" class="hidden" type="file" @change="uploadImage" />
+      </div>
+    </div>
     <div class="text-[30px] text-white">
-      <el-button @click="$router.go(-1)" class="mb-[20px]">Back</el-button>
-      <h2>Profile</h2>
+      <!-- <el-button @click="$router.go(-1)" class="mb-[20px]">Back</el-button> -->
       <div>
         <h3>Your email: {{ getCurrentEmail }}</h3>
         <h3 v-if="userDataStore.getUserProfileName">
@@ -27,27 +63,8 @@
               <el-button @click="setUserName">Set Name</el-button>
             </div>
           </div>
-          <!-- <div>
-            <el-button @click="loadUserInCollection">Load User</el-button>
-          </div> -->
         </div>
       </div>
-    </div>
-
-    <div class="mt-[50px]">
-      <img
-        width="200"
-        v-if="!userDataStore.getUserProfileAvatar"
-        src="../assets/user.png"
-        alt=""
-      />
-      <img
-        v-else
-        :src="userDataStore.getUserProfileAvatar"
-        width="200"
-        alt=""
-      />
-      <input type="file" @change="uploadImage" />
     </div>
   </div>
 </template>
@@ -67,7 +84,14 @@ import { useToast } from "vue-toastification";
 import { toastOptions } from "../toast/toastOptions";
 import { useUserDataStore } from "../stores/userData";
 import { useGamesStoreBasket } from "../stores/gamesBasket";
-import { collection, doc, setDoc, getDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../firebase/firebase";
 const userDataStore = useUserDataStore();
 const gamesBasket = useGamesStoreBasket();
@@ -76,7 +100,7 @@ const toast = useToast();
 const userName = ref();
 const displayName = ref();
 const isChangeNameActive = ref(false);
-
+const isImageChoosable = ref(false);
 const uploadImage = (e: any) => {
   const storage = getStorage();
   if (e.target.files && e.target.files.length > 0) {
@@ -173,12 +197,10 @@ const getCurrentEmail = computed(() => {
 
 const updateUserInfoInCollection = async () => {
   const usersRef = collection(db, "users");
-
-  await setDoc(doc(usersRef, userDataStore.getUserProfileEmail), {
+  await updateDoc(doc(usersRef, userDataStore.getUserProfileEmail), {
     userDisplayName: userDataStore.getUserProfileName,
     userEmail: userDataStore.getUserProfileEmail,
     userAvatar: userDataStore.getUserProfileAvatar,
-    gamesInCart: gamesBasket.getAllGamesInCart,
   });
 };
 
@@ -201,4 +223,9 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.unlockChoose {
+  visibility: visible;
+  opacity: 1;
+}
+</style>

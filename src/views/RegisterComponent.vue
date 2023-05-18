@@ -62,7 +62,14 @@ import {
   updateProfile,
 } from "firebase/auth";
 
-import { collection, doc, setDoc, getDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { useUserDataStore } from "../stores/userData";
 
@@ -72,6 +79,7 @@ import { toastOptions } from "../toast/toastOptions";
 
 import router from "../router/router";
 
+import userFields from "../constants/userFields";
 const ruleFormRef = ref<FormInstance>();
 
 const toast = useToast();
@@ -139,13 +147,10 @@ const signUp = async (formEl: FormInstance | undefined) => {
 
 const createUserCollection = async () => {
   const usersRef = collection(db, "users");
-
-  await setDoc(doc(usersRef, userDataStore.getUserProfileEmail), {
-    userDisplayName: userDataStore.getUserProfileName,
-    userEmail: userDataStore.getUserProfileEmail,
-    userAvatar: userDataStore.getUserProfileAvatar,
-    gamesInCart: [],
-  });
+  await setDoc(
+    doc(usersRef, userDataStore.getUserProfileEmail),
+    userFields.setup().userFields
+  );
 };
 
 const signInWithGoogle = () => {

@@ -64,7 +64,16 @@ import {
 } from "firebase/auth";
 import { useToast } from "vue-toastification";
 import router from "../router/router";
+import { collection, doc, updateDoc, getDoc } from "@firebase/firestore";
+
+import { db } from "../firebase/firebase";
+import { useUserDataStore } from "../stores/userData";
+import { log } from "console";
+
+const userDataStore = useUserDataStore();
 const ruleFormRef = ref<FormInstance>();
+
+const auth = getAuth();
 
 const toast = useToast();
 interface Login {
@@ -109,6 +118,7 @@ const signIn = async (formEl: FormInstance | undefined) => {
         .then((data) => {
           console.log(data);
           toast.success("You are logged in", toastOptions);
+
           router.push({ name: "store" });
         })
         .catch((error) => {
