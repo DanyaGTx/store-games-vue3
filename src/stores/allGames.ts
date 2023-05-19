@@ -14,6 +14,7 @@ export const useAllGamesStore = defineStore('gamesList', {
           this.allGames = data.results;
           console.log('action', data.results);
         },
+        // getGamesByFilter
     }
   })
 

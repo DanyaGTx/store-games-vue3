@@ -28,10 +28,9 @@ export const useGamesStoreBasket = defineStore('gamesBasket', {
           rating: data.rating
         }
         if(auth.currentUser?.email) {
-          this.gamesBasket.push(newGame)
+            this.gamesBasket.push(newGame)
             const usersRef = collection(db, "users");
             await updateDoc(doc(usersRef, auth.currentUser.email), {gamesInCart: [...this.gamesBasket]},)
-          
         } else {
           toast("You must be logged in", toastOptions);
         }

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="sticky top-0 bg-[#252836] min-[600px]:flex min-[600px]:justify-between min-[600px]:items-center max-[600px]:text-center p-2"
+    class="sticky top-0 z-10 bg-[#252836] min-[600px]:flex min-[600px]:justify-between min-[600px]:items-center max-[600px]:text-center p-2"
   >
     <h1
       @click="$router.push('/')"

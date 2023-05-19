@@ -3,11 +3,14 @@
     <div v-if="gameDetails">
       <el-button @click="$router.go(-1)" class="mb-[20px]">Back</el-button>
       <div class="flex gap-3 max-[1200px]:block">
-        <img
-          class="max-w-[600px] h-full w-full"
-          :src="gameDetails.background_image"
-          alt=""
-        />
+        <div>
+          <img
+            class="max-w-[600px] h-full w-full object-cover"
+            :src="gameDetails.background_image"
+            alt=""
+          />
+        </div>
+
         <div class="flex flex-col justify-between">
           <div class="text-white">
             <h1 class="text-[30px] font-bold">
@@ -65,6 +68,18 @@
       </div>
       <div class="text-white mt-5">
         <p v-html="gameDetails.description"></p>
+      </div>
+
+      <div v-if="gameTrailer.results.length" class="text-center m-auto">
+        <video
+          :poster="gameTrailer.results[0].preview"
+          class="w-full text-center m-auto"
+          controls
+        >
+          <source :src="gameTrailer.results[0].data.max" type="video/mp4" />
+
+          Your browser does not support the video tag.
+        </video>
       </div>
     </div>
     <div v-else class="absolute right-[48%]">
@@ -140,7 +155,7 @@ interface GAME {
 }
 
 const gameDetails = ref<GAME_DETAILS>();
-
+const gameTrailer = ref();
 const addGameToCart = () => {
   if (gameDetails.value?.id) {
     gamesStoreBasket.addGame(gameDetails.value.id);
@@ -155,9 +170,17 @@ const deleteGameFromCart = () => {
 
 const getGameById = async (id: number) => {
   const { data } = await api.games.getGameById(id);
-
   gameDetails.value = data;
   console.log(gameDetails.value);
+};
+
+const getGameTrailer = async (id: number) => {
+  try {
+    const { data } = await api.games.getGameTrailer(id);
+    gameTrailer.value = data;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 const isInBasket = computed(() => {
@@ -168,6 +191,7 @@ const isInBasket = computed(() => {
 
 onMounted(() => {
   getGameById(+route.params.id);
+  getGameTrailer(+route.params.id);
   console.log("router: ", route.params.id);
 });
 </script>

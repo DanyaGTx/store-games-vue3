@@ -14,7 +14,7 @@
       />
       <img
         v-else
-        class="rounded-[50%] transition-all ease-in-out delay-50 h-[200px] border border-red-100"
+        class="rounded-[50%] transition-all ease-in-out delay-50 h-[200px] border border-red-100 object-cover"
         :class="{ 'blur-[2px]': isImageChoosable }"
         :src="userDataStore.getUserProfileAvatar"
         width="200"
@@ -38,7 +38,6 @@
       </div>
     </div>
     <div class="text-[30px] text-white">
-      <!-- <el-button @click="$router.go(-1)" class="mb-[20px]">Back</el-button> -->
       <div>
         <h3>Your email: {{ getCurrentEmail }}</h3>
         <h3 v-if="userDataStore.getUserProfileName">
