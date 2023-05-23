@@ -64,10 +64,12 @@ import {
 import { useToast } from "vue-toastification";
 
 import { toastOptions } from "../toast/toastOptions";
-
+import { doc, getDoc } from "@firebase/firestore";
 import router from "../router/router";
 import createUserCollection from "../firebase/database/createUserCollection";
-
+import { db } from "../firebase/firebase";
+import { useUserDataStore } from "../stores/userData";
+const userDataStore = useUserDataStore();
 const ruleFormRef = ref<FormInstance>();
 
 const toast = useToast();
@@ -131,20 +133,15 @@ const signUp = async (formEl: FormInstance | undefined) => {
   });
 };
 
-// const createUserCollection = async () => {
-//   const usersRef = collection(db, "users");
-//   await setDoc(
-//     doc(usersRef, userDataStore.getUserProfileEmail),
-//     userFields.setup().userFields
-//   );
-// };
-
 const signInWithGoogle = () => {
   const provider = new GoogleAuthProvider();
   signInWithPopup(getAuth(), provider)
-    .then((result) => {
-      console.log(result.user);
-      // createcollection
+    .then(async (result) => {
+      const docRef = doc(db, "users", userDataStore.getUserProfileEmail);
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists()) {
+        createUserCollection();
+      }
       router.push({ name: "store" });
     })
     .catch((error) => {

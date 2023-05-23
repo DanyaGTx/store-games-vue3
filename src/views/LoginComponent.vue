@@ -64,13 +64,10 @@ import {
 } from "firebase/auth";
 import { useToast } from "vue-toastification";
 import router from "../router/router";
-import { collection, doc, updateDoc, getDoc } from "@firebase/firestore";
-// import createUserCollection from "../firebase/database/createUserCollection";
+import { doc, getDoc } from "@firebase/firestore";
 import { db } from "../firebase/firebase";
 import { useUserDataStore } from "../stores/userData";
-
 import createUserCollection from "../firebase/database/createUserCollection";
-import { async } from "@firebase/util";
 const userDataStore = useUserDataStore();
 const ruleFormRef = ref<FormInstance>();
 const auth = getAuth();
