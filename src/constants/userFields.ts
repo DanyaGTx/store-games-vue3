@@ -5,18 +5,16 @@ import { getAuth } from "firebase/auth";
 
 export default {
     setup() {
+        // fields which will be created in collection when user registered
         const auth = getAuth()
         const userDataStore = useUserDataStore();
-        const gamesBasket = useGamesStoreBasket();
-        const favoriteGames = useFavoriteGames();
         const userFields = {
             userDisplayName: userDataStore.getUserProfileName,
             userEmail: userDataStore.getUserProfileEmail,
             userAvatar: auth.currentUser?.photoURL,
-            gamesInCart: gamesBasket.getAllGamesInCart,
-            gamesInLibrary: favoriteGames.favoriteGamesIds,
+            gamesInCart: [],
+            gamesInLibrary: [],
         };
-
         return { userFields };
     }
 }

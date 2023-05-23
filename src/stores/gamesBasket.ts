@@ -21,13 +21,13 @@ export const useGamesStoreBasket = defineStore('gamesBasket', {
     },
     actions: {
       async addGame(id: number) {
-        const { data } = await api.games.getGameById(id);
-        const newGame = {
-          id: data.id,
-          name: data.name,
-          rating: data.rating
-        }
         if(auth.currentUser?.email) {
+            const { data } = await api.games.getGameById(id);
+            const newGame = {
+              id: data.id,
+              name: data.name,
+              rating: data.rating
+            }
             this.gamesBasket.push(newGame)
             const usersRef = collection(db, "users");
             await updateDoc(doc(usersRef, auth.currentUser.email), {gamesInCart: this.gamesBasket},)

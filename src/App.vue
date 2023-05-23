@@ -20,21 +20,11 @@ const loadCartGamesFromDatabase = async () => {
   await gamesBasket.setGamesInCart();
 };
 
-const updateAccountFields = async () => {
-  if (userDataStore.getUserProfileName) {
-    const usersRef = collection(db, "users");
-    const docRef = doc(usersRef, userDataStore.getUserProfileEmail);
-    await setDoc(docRef, userFields.setup().userFields);
-  }
-};
-
 onMounted(async () => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       console.log("User is logged in", user);
-
       loadCartGamesFromDatabase();
-      updateAccountFields();
       if (user.photoURL) {
         userDataStore.setUserProfileAvatar(user.photoURL);
       } else {

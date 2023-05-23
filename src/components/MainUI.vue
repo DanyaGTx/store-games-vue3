@@ -4,7 +4,7 @@
       <Header @search-query="searchQuery" />
       <div class="mt-[30px] flex">
         <Sidebar />
-        <div class="flex flex-col">
+        <div class="w-full max-w-[1200px]">
           <router-view :search-query="searchString"></router-view>
         </div>
       </div>

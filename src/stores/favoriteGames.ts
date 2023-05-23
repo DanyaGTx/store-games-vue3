@@ -15,8 +15,8 @@ export const useFavoriteGames = defineStore('favoriteGames', {
 
     actions: {
         async setFavoriteGames(newFavoriteGames: number[]) {         
-            this.favoriteGamesIds.push(...newFavoriteGames)
-            if (auth.currentUser?.email) {
+          if (auth.currentUser?.email) {
+              this.favoriteGamesIds.push(...newFavoriteGames)
               const usersRef = collection(db, "users");
               await updateDoc(doc(usersRef, auth.currentUser.email), {
                 gamesInLibrary: this.favoriteGamesIds,

@@ -1,17 +1,22 @@
 <template>
-  <div>
+  <div class="w-full">
     <div class="text-[30px] text-white">Favorite Games</div>
-    <div
-      v-if="!isGamesLoading"
-      class="text-white"
-      v-for="game in favoriteGames"
-    >
-      {{ game.name }}
+    <div v-if="favoriteGames.length">
+      <div
+        v-if="!isGamesLoading"
+        class="text-white"
+        v-for="game in favoriteGames"
+      >
+        {{ game.name }}
 
-      <el-button @click="deleteGameFromFavorite(game.id)">Delete</el-button>
+        <el-button @click="deleteGameFromFavorite(game.id)">Delete</el-button>
+      </div>
+      <div v-else class="absolute left-[50%]">
+        <img class="w-[100px] text-center" src="../assets/loader.gif" alt="" />
+      </div>
     </div>
-    <div v-else class="absolute left-[50%]">
-      <img class="w-[100px] text-center" src="../assets/loader.gif" alt="" />
+    <div class="text-[20px] text-white" v-else>
+      <p>You dont have favourite games :(</p>
     </div>
   </div>
 </template>
@@ -32,7 +37,6 @@ onMounted(async () => {
     top: 0,
   });
   await favoriteGamesStore.getFavoriteGamesFromDB();
-  // await getGamesForLibrary();
   console.log("Mounteed Favorite Games");
 });
 
