@@ -65,14 +65,13 @@ import {
 import { useToast } from "vue-toastification";
 import router from "../router/router";
 import { collection, doc, updateDoc, getDoc } from "@firebase/firestore";
-
+// import createUserCollection from "../firebase/database/createUserCollection";
 import { db } from "../firebase/firebase";
 import { useUserDataStore } from "../stores/userData";
-import { log } from "console";
 
+import createUserCollection from "../firebase/database/createUserCollection";
 const userDataStore = useUserDataStore();
 const ruleFormRef = ref<FormInstance>();
-
 const auth = getAuth();
 
 const toast = useToast();
@@ -135,6 +134,7 @@ const signInWithGoogle = () => {
   signInWithPopup(getAuth(), provider)
     .then((result) => {
       console.log(result.user);
+      createUserCollection();
       router.push({ name: "store" });
     })
     .catch((error) => {

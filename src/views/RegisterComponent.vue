@@ -59,32 +59,18 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
-  updateProfile,
 } from "firebase/auth";
-
-import {
-  collection,
-  doc,
-  setDoc,
-  getDoc,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
-import { db } from "../firebase/firebase";
-import { useUserDataStore } from "../stores/userData";
 
 import { useToast } from "vue-toastification";
 
 import { toastOptions } from "../toast/toastOptions";
 
 import router from "../router/router";
+import createUserCollection from "../firebase/database/createUserCollection";
 
-import userFields from "../constants/userFields";
 const ruleFormRef = ref<FormInstance>();
 
 const toast = useToast();
-
-const userDataStore = useUserDataStore();
 
 interface Register {
   email: string;
@@ -145,13 +131,13 @@ const signUp = async (formEl: FormInstance | undefined) => {
   });
 };
 
-const createUserCollection = async () => {
-  const usersRef = collection(db, "users");
-  await setDoc(
-    doc(usersRef, userDataStore.getUserProfileEmail),
-    userFields.setup().userFields
-  );
-};
+// const createUserCollection = async () => {
+//   const usersRef = collection(db, "users");
+//   await setDoc(
+//     doc(usersRef, userDataStore.getUserProfileEmail),
+//     userFields.setup().userFields
+//   );
+// };
 
 const signInWithGoogle = () => {
   const provider = new GoogleAuthProvider();
