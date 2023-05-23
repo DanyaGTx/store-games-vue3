@@ -70,6 +70,7 @@ import { db } from "../firebase/firebase";
 import { useUserDataStore } from "../stores/userData";
 
 import createUserCollection from "../firebase/database/createUserCollection";
+import { async } from "@firebase/util";
 const userDataStore = useUserDataStore();
 const ruleFormRef = ref<FormInstance>();
 const auth = getAuth();
@@ -117,7 +118,6 @@ const signIn = async (formEl: FormInstance | undefined) => {
         .then((data) => {
           console.log(data);
           toast.success("You are logged in", toastOptions);
-
           router.push({ name: "store" });
         })
         .catch((error) => {
@@ -132,9 +132,15 @@ const signIn = async (formEl: FormInstance | undefined) => {
 const signInWithGoogle = () => {
   const provider = new GoogleAuthProvider();
   signInWithPopup(getAuth(), provider)
-    .then((result) => {
+    .then(async (result) => {
       console.log(result.user);
-      createUserCollection();
+
+      const docRef = doc(db, "users", userDataStore.getUserProfileEmail);
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists()) {
+        createUserCollection();
+      }
+
       router.push({ name: "store" });
     })
     .catch((error) => {

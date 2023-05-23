@@ -144,6 +144,7 @@ const signInWithGoogle = () => {
   signInWithPopup(getAuth(), provider)
     .then((result) => {
       console.log(result.user);
+      // createcollection
       router.push({ name: "store" });
     })
     .catch((error) => {
