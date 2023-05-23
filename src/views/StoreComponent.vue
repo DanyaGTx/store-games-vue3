@@ -26,7 +26,7 @@
         />
       </div>
     </div>
-    <div v-else-if="!isError" class="absolute right-[48%]">
+    <div v-else-if="!isError" class="absolute left-[50%]">
       <img class="w-[100px]" src="../assets/loader.gif" alt="" />
     </div>
   </div>

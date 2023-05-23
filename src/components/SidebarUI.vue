@@ -11,17 +11,17 @@
           /></router-link>
         </div>
         <div class="flex items-center">
-          <router-link class="text-white ml-[10px]" :to="{ name: 'community' }"
+          <router-link class="text-white ml-[10px]" :to="{ name: 'favorite' }"
             ><img src="../assets/menu/menu-library.svg" alt=""
           /></router-link>
         </div>
         <div class="flex items-center">
-          <router-link class="text-white ml-[10px]" :to="{ name: 'community' }"
+          <router-link class="text-white ml-[10px]" :to="{ name: '' }"
             ><img src="../assets/menu/menu-library.svg" alt=""
           /></router-link>
         </div>
         <div class="flex items-center">
-          <router-link class="text-white ml-[10px]" :to="{ name: 'community' }"
+          <router-link class="text-white ml-[10px]" :to="{ name: '' }"
             ><img src="../assets/menu/menu-library.svg" alt=""
           /></router-link>
         </div>
@@ -35,25 +35,25 @@
       <nav class="flex flex-col gap-10">
         <div class="flex items-center">
           <img src="../assets/menu/menu-store.svg" alt="" />
-          <router-link class="text-white ml-[10px]" to="/store"
+          <router-link class="text-white ml-[10px]" :to="{ name: 'store' }"
             >Store</router-link
           >
         </div>
         <div class="flex items-center">
           <img src="../assets/menu/menu-library.svg" alt="" />
-          <router-link class="text-white ml-[10px]" to="/community"
-            >Library</router-link
+          <router-link class="text-white ml-[10px]" :to="{ name: 'favorite' }"
+            >Favorites</router-link
           >
         </div>
         <div class="flex items-center">
           <img src="../assets/menu/menu-community.svg" alt="" />
-          <router-link class="text-white ml-[10px]" to="/community"
+          <router-link class="text-white ml-[10px]" :to="{ name: '' }"
             >Library</router-link
           >
         </div>
         <div class="flex items-center">
           <img src="../assets/menu/menu-profile.svg" alt="" />
-          <router-link class="text-white ml-[10px]" to="/community"
+          <router-link class="text-white ml-[10px]" :to="{ name: '' }"
             >Library</router-link
           >
         </div>

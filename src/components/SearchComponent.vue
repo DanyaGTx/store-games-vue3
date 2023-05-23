@@ -29,7 +29,6 @@
 </template>
 
 <script lang="ts" setup>
-import { emit } from "process";
 import { ref, watch } from "vue";
 import { useAllGamesStore } from "../stores/allGames";
 

@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import StoreComponent from "../views/StoreComponent.vue";
-import CommunityComponent from "../views/CommunityComponent.vue";
+import FavoriteGamesComponent from "../views/FavoriteGamesComponent.vue";
 import MainUIVue from "../components/MainUI.vue";
 import RegisterComponent from "../views/RegisterComponent.vue";
 import LoginComponent from '../views/LoginComponent.vue'
@@ -26,16 +26,16 @@ const router = createRouter({
       children: [{ path: "", name: "route.store", component: StoreComponent }],
     },
     {
-      path: `/community`,
-      name: "community",
+      path: `/favorite`,
+      name: "favorite",
       redirect: {
-        name: 'route.community'
+        name: 'route.favorite'
       },
       component: MainUIVue,
       meta: {
         requiresAuth: true
       },
-      children: [{ path: "", name: "route.community", component: CommunityComponent }],
+      children: [{ path: "", name: "route.favorite", component: FavoriteGamesComponent }],
     },
     {
       path: `/login`,
@@ -73,8 +73,6 @@ const router = createRouter({
     },
   ],
 });
-
-
 
 router.beforeEach(async (to,from, next) => {
   if(to.matched.some((record) => record.meta.requiresAuth)) {

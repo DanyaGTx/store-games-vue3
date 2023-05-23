@@ -30,7 +30,7 @@ export const useGamesStoreBasket = defineStore('gamesBasket', {
         if(auth.currentUser?.email) {
             this.gamesBasket.push(newGame)
             const usersRef = collection(db, "users");
-            await updateDoc(doc(usersRef, auth.currentUser.email), {gamesInCart: [...this.gamesBasket]},)
+            await updateDoc(doc(usersRef, auth.currentUser.email), {gamesInCart: this.gamesBasket},)
         } else {
           toast("You must be logged in", toastOptions);
         }
@@ -39,25 +39,30 @@ export const useGamesStoreBasket = defineStore('gamesBasket', {
         if(auth.currentUser?.email) {
           this.gamesBasket = this.gamesBasket.filter((game) => game.id !== id)
           const usersRef = collection(db, "users");
-          await updateDoc(doc(usersRef, auth.currentUser.email), {gamesInCart: [...this.gamesBasket]},)
+          await updateDoc(doc(usersRef, auth.currentUser.email), {gamesInCart: this.gamesBasket},)
          } else {
           toast("You must be logged in", toastOptions);
         }
-        
       },
 
       async setGamesInCart() {
         if(auth.currentUser?.email) {
           const docRef = doc(db, "users", auth.currentUser.email);
           const docSnap = await getDoc(docRef);
-  
-          console.log('DATABASE', docSnap.data());
           if (docSnap.exists()) {  
             this.gamesBasket = docSnap.data().gamesInCart
           } else {
             console.log("No such document!");
           }
         }
+      },
+
+      clearGamesInCart() {        
+        this.gamesBasket = [];
+      },
+
+      hasInCart(id: number) {
+        return this.gamesBasket.find(game => game.id === id)
       }
     },
     getters: {

@@ -23,7 +23,7 @@ const loadCartGamesFromDatabase = async () => {
 const updateAccountFields = async () => {
   if (userDataStore.getUserProfileName) {
     const usersRef = collection(db, "users");
-    const docRef = doc(usersRef, userDataStore.getUserProfileName);
+    const docRef = doc(usersRef, userDataStore.getUserProfileEmail);
     await setDoc(docRef, userFields.setup().userFields);
   }
 };

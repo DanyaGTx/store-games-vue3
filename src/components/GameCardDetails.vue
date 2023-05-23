@@ -49,14 +49,15 @@
 
           <div @click.stop>
             <el-button
-              class="w-full max-[1200px]:max-w-[600px]"
+              class="w-full max-w-[300px]"
               v-if="!isInBasket"
               @click="addGameToCart"
               type="success"
+              :disabled="!isAddGameButtonActive"
               >Add to cart</el-button
             >
             <el-button
-              class="w-full max-[1200px]:max-w-[600px]"
+              class="w-full max-w-[300px]"
               v-else
               @click="deleteGameFromCart"
               type="info"
@@ -89,6 +90,7 @@
 </template>
 
 <script lang="ts" setup>
+import { watch } from "fs";
 import { onMounted, ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { api } from "../api/api";
@@ -98,7 +100,7 @@ const route = useRoute();
 const router = useRouter();
 
 const gamesStoreBasket = useGamesStoreBasket();
-
+const isAddGameButtonActive = ref(true);
 type GENRES = {
   games_count: number;
   id: number;
@@ -157,12 +159,14 @@ interface GAME {
 const gameDetails = ref<GAME_DETAILS>();
 const gameTrailer = ref();
 const addGameToCart = () => {
+  isAddGameButtonActive.value = false;
   if (gameDetails.value?.id) {
     gamesStoreBasket.addGame(gameDetails.value.id);
   }
 };
 
 const deleteGameFromCart = () => {
+  isAddGameButtonActive.value = true;
   if (gameDetails.value?.id) {
     gamesStoreBasket.deleteGame(gameDetails.value.id);
   }
@@ -184,6 +188,7 @@ const getGameTrailer = async (id: number) => {
 };
 
 const isInBasket = computed(() => {
+  isAddGameButtonActive.value = true;
   return gamesStoreBasket.gamesBasket.find(
     (game) => game.id === gameDetails.value?.id
   );

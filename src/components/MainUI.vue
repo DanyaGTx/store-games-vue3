@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="max-w-[1800px] m-auto bg-[#252836] h-full min-h-[950px] pb-[20px]"
-  >
+  <div class="max-w-[1800px] m-auto bg-[#252836] h-full pb-[20px]">
     <div>
       <Header @search-query="searchQuery" />
       <div class="mt-[30px] flex">

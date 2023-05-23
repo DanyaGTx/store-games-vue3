@@ -16,6 +16,7 @@
       </div>
     </div>
     <div @click.stop class="text-right m-[20px]">
+      <!-- если игры в библиотеки , то показывать текст In Library либо disabled чтобы была -->
       <el-button
         v-if="!isInBasket"
         @click="addGameToCart(game.id)"
@@ -77,6 +78,7 @@ const imageLoading = (img: string) => {
 };
 
 const isInBasket = computed(() => {
+  isAddGameButtonActive.value = true;
   return gamesStoreBasket.gamesBasket.find((game) => game.id === props.game.id);
 });
 </script>
