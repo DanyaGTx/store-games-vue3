@@ -60,20 +60,19 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { useRouter } from "vue-router";
+import { onMounted, ref, watch, markRaw } from "vue";
+import { storeToRefs } from "pinia";
 import { useFavoriteGames } from "../stores/favoriteGames";
 import { api } from "../api/api";
-import { storeToRefs } from "pinia";
-import "animate.css";
-import { markRaw } from "vue";
 import { ElMessageBox } from "element-plus";
 import { Delete } from "@element-plus/icons-vue";
+import "animate.css";
 const favoriteGames = ref<GAME[]>([]);
 const isGamesLoading = ref(true);
 
 const favoriteGamesStore = useFavoriteGames();
 const { favoriteGamesIds } = storeToRefs(favoriteGamesStore);
-import { useRouter } from "vue-router";
 const router = useRouter();
 onMounted(async () => {
   window.scrollTo({
