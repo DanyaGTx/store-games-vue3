@@ -5,7 +5,7 @@
         <div class="mr-[10px] w-[50px] h-[50px]">
           <img
             v-if="getCurrentAvatar"
-            class="w-full h-full object-cover rounded-[50%]"
+            class="object-cover rounded-[50%] min-w-[50px]"
             :src="userDataStore.getUserProfileAvatar"
             alt=""
           />

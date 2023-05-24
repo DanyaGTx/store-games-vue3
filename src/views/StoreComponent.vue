@@ -3,7 +3,7 @@
     <h1 class="text-[30px] text-white mb-[20px]">Games</h1>
     <div v-if="!isLoading && !isError">
       <div
-        class="grid gap-4 grid-cols-4 max-[1300px]:grid-cols-3 max-[1100px]:grid-cols-2 max-[750px]:grid-cols-1"
+        class="grid gap-4 m-[10px] grid-cols-4 max-[1300px]:grid-cols-3 max-[1100px]:grid-cols-2 max-[750px]:grid-cols-1"
       >
         <game-card
           @click="openCardDetails(game.id)"
@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch, computed } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 import { ElPagination } from "element-plus";
 //@ts-ignore
 import debounce from "lodash.debounce";
@@ -48,7 +48,6 @@ import { useToast } from "vue-toastification";
 
 import { toastOptions } from "../toast/toastOptions";
 import { getAuth } from "@firebase/auth";
-
 const toast = useToast();
 
 const router = useRouter();

@@ -4,12 +4,12 @@
   >
     <h1
       @click="$router.push('/')"
-      class="text-white text-[30px] font-popins font-semibold max-[1000px]:text-[20px] min-w-[120px] cursor-pointer ease-in duration-300 hover:text-[#22a1bd]"
+      class="text-white text-[30px] font-popins font-semibold min-w-[120px] cursor-pointer ease-in duration-300 hover:text-[#22a1bd]"
     >
       Game store
     </h1>
     <SearchComponent @search-query="searchQuery" />
-    <div class="mr-[100px] max-[600px]:mt-[10px]">
+    <div class="mr-[100px] max-[1150px]:mr-[0px] max-[600px]:mt-[10px]">
       <div class="flex items-center">
         <BasketComponent />
         <HeaderMenuComponent />

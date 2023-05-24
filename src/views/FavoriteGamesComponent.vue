@@ -1,21 +1,59 @@
 <template>
   <div class="w-full">
     <div class="text-[30px] text-white">Favorite Games</div>
-    <div v-if="favoriteGames.length">
+    <div v-if="isGamesLoading">
+      <p class="text-center text-white text-[20px]">Loading...</p>
+      <img
+        class="w-[100px] text-center m-auto"
+        src="../assets/loader.gif"
+        alt=""
+      />
+    </div>
+    <div
+      v-if="!isGamesLoading && favoriteGames.length"
+      class="text-white mb-[20px] max-[450px]:m-[20px] animate__animated animate__fadeIn"
+      v-for="game in favoriteGames"
+    >
       <div
-        v-if="!isGamesLoading"
-        class="text-white"
-        v-for="game in favoriteGames"
+        class="flex gap-2 max-[450px]:flex-col max-[380px]:border-blue-500 max-[380px]:border-2 max-[380px]:p-[10px] max-[380px]:rounded-md"
+        :class="game.isDeleting ? 'animate__animated animate__zoomOut' : ''"
       >
-        {{ game.name }}
+        <div @click="openCardDetails(game.id)" class="">
+          <img
+            class="cursor-pointer max-w-[200px] h-[150px] object-cover max-[450px]:max-w-full"
+            :src="game.background_image"
+            alt=""
+          />
+        </div>
 
-        <el-button @click="deleteGameFromFavorite(game.id)">Delete</el-button>
-      </div>
-      <div v-else class="absolute left-[50%]">
-        <img class="w-[100px] text-center" src="../assets/loader.gif" alt="" />
+        <div
+          class="flex flex-col justify-between max-[450px]:flex-row max-[380px]:flex-col"
+        >
+          <div>
+            <h2>
+              {{ game.name }}
+            </h2>
+            <div>
+              <a
+                class="text-blue-500 underline"
+                :href="game.website"
+                target="_blank"
+                >Original Website</a
+              >
+            </div>
+          </div>
+          <div>
+            <el-button @click="deleteGameFromFavorite(game.id)"
+              >Delete</el-button
+            >
+          </div>
+        </div>
       </div>
     </div>
-    <div class="text-[20px] text-white" v-else>
+    <div
+      v-else-if="!isGamesLoading && !favoriteGamesStore.getFavoriteIds.length"
+      class="text-[20px] text-white"
+    >
       <p>You dont have favourite games :(</p>
     </div>
   </div>
@@ -26,18 +64,31 @@ import { onMounted, ref, watch } from "vue";
 import { useFavoriteGames } from "../stores/favoriteGames";
 import { api } from "../api/api";
 import { storeToRefs } from "pinia";
+import "animate.css";
+import { markRaw } from "vue";
+import { ElMessageBox } from "element-plus";
+import { Delete } from "@element-plus/icons-vue";
 const favoriteGames = ref<GAME[]>([]);
 const isGamesLoading = ref(true);
 
 const favoriteGamesStore = useFavoriteGames();
 const { favoriteGamesIds } = storeToRefs(favoriteGamesStore);
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 onMounted(async () => {
   window.scrollTo({
     top: 0,
   });
-  await favoriteGamesStore.getFavoriteGamesFromDB();
-  console.log("Mounteed Favorite Games");
+  try {
+    console.log("Грузимся");
+    isGamesLoading.value = true;
+    await favoriteGamesStore.getFavoriteGamesFromDB();
+    isGamesLoading.value = false;
+  } catch (e) {
+    console.log(e);
+  } finally {
+    console.log("отключаем загрузку");
+  }
 });
 
 const getGamesForLibrary = async () => {
@@ -47,31 +98,60 @@ const getGamesForLibrary = async () => {
   );
   const games = [] as GAME[];
   try {
-    isGamesLoading.value = true;
+    // isGamesLoading.value = true;
     const gameResults = await Promise.all(gamePromises);
     gameResults.forEach((result) => {
-      const { id, name } = result.data;
-      games.push({ id, name });
+      console.log("GAME RESULT", result.data);
+      const { id, name, website, background_image } = result.data;
+      games.push({ id, website, name, background_image, isDeleting: false });
     });
     favoriteGames.value = games;
   } catch (error) {
     console.error("Error fetching game data:", error);
   } finally {
-    isGamesLoading.value = false;
+    // isGamesLoading.value = false;
   }
 };
 
 const deleteGameFromFavorite = async (id: number) => {
-  await favoriteGamesStore.deleteGameFromLibrary(id);
+  try {
+    await ElMessageBox.confirm(
+      "Are you sure to delete this game from library?",
+      "Warning",
+      {
+        type: "warning",
+        icon: markRaw(Delete),
+        cancelButtonText: "No",
+        confirmButtonText: "Yes",
+      }
+    );
+    const deletingGame = favoriteGames.value.find((game) => game.id === id);
+    if (deletingGame) {
+      deletingGame.isDeleting = true;
+    }
+    setTimeout(async () => {
+      await favoriteGamesStore.deleteGameFromLibrary(id);
+    }, 600);
+    // Perform deletion logic here
+  } catch (error) {
+    return error;
+  }
 };
 
 interface GAME {
   name: string;
   id: number;
-  // rating: number;
-  // background_image: string;
-  // maybe I need more fields, who knows..
+  website: string;
+  background_image: string;
+  isDeleting: boolean;
 }
+
+const openCardDetails = (id: number) => {
+  router.push({
+    name: "game-details",
+    params: { id },
+  });
+};
 
 watch(
   () => favoriteGamesIds,
@@ -80,6 +160,13 @@ watch(
     await getGamesForLibrary();
   },
   { deep: true }
+);
+
+watch(
+  () => favoriteGames.value.length > 0,
+  (newGames, oldGames) => {
+    isGamesLoading.value = false;
+  }
 );
 </script>
 

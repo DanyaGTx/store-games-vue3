@@ -7,23 +7,19 @@ import { onMounted } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useUserDataStore } from "./stores/userData";
 import { useGamesStoreBasket } from "./stores/gamesBasket";
-import { db } from "./firebase/firebase";
-import { collection, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
-import userFields from "./constants/userFields";
+import { useFavoriteGames } from "./stores/favoriteGames";
 const userDataStore = useUserDataStore();
-
 const gamesBasket = useGamesStoreBasket();
-
 const auth = getAuth();
-
 const loadCartGamesFromDatabase = async () => {
   await gamesBasket.setGamesInCart();
 };
-
+const favoriteGamesStore = useFavoriteGames();
 onMounted(async () => {
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       console.log("User is logged in", user);
+      await favoriteGamesStore.getFavoriteGamesFromDB();
       loadCartGamesFromDatabase();
       if (user.photoURL) {
         userDataStore.setUserProfileAvatar(user.photoURL);

@@ -26,7 +26,6 @@
           :class="{ unlockChoose: isImageChoosable }"
           class="text-white text-[20px] w-full text-center cursor-pointer invisible opacity-0 transition-all ease-linear delay-50"
         >
-          <!-- Change Image -->
           <img
             class="max-w-[60px] absolute top-[40%] left-[50%] translate-x-[-50%]"
             src="../assets/photo-edit-icon.png"
@@ -37,7 +36,7 @@
         <input id="files" class="hidden" type="file" @change="uploadImage" />
       </div>
     </div>
-    <div class="text-[30px] text-white">
+    <div class="text-[30px] text-white max-[450px]:text-[20px]">
       <div>
         <h3>Your email: {{ getCurrentEmail }}</h3>
         <h3 v-if="userDataStore.getUserProfileName">
@@ -83,14 +82,7 @@ import { useToast } from "vue-toastification";
 import { toastOptions } from "../toast/toastOptions";
 import { useUserDataStore } from "../stores/userData";
 import { useGamesStoreBasket } from "../stores/gamesBasket";
-import {
-  collection,
-  doc,
-  setDoc,
-  getDoc,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
+import { collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 const userDataStore = useUserDataStore();
 const gamesBasket = useGamesStoreBasket();

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-w-[180px] max-w-[280px] h-[350px] bg-[#49537d] rounded-lg flex flex-col justify-between cursor-pointer max-[500px]:h-[300px]"
+    class="min-w-[180px] max-w-[280px] max-[1100px]:max-w-[380px] max-[750px]:h-[450px] h-[350px] bg-[#49537d] rounded-lg flex flex-col justify-between cursor-pointer max-[500px]:h-[300px]"
   >
     <div class="p-[10px]">
       <div class="h-[200px] w-full">
@@ -15,8 +15,8 @@
         <span>Rating: {{ game.rating }}</span>
       </div>
     </div>
-    <div @click.stop class="text-right m-[20px]">
-      <!-- если игры в библиотеки , то показывать текст In Library либо disabled чтобы была -->
+    <div v-if="!isInLibrary" @click.stop class="text-right m-[20px]">
+      <!-- если игры в библиотеки, то показывать текст In Library либо disabled чтобы была -->
       <el-button
         v-if="!isInBasket"
         @click="addGameToCart(game.id)"
@@ -28,6 +28,9 @@
         >Delete from cart</el-button
       >
     </div>
+    <div v-else class="text-right m-[20px] text-green-500 font-bold">
+      In Library
+    </div>
   </div>
 </template>
 
@@ -36,11 +39,14 @@ import { Loading } from "@element-plus/icons-vue";
 import { computed, onMounted, ref } from "vue";
 
 import { useRouter, useRoute } from "vue-router";
+import { useFavoriteGames } from "../stores/favoriteGames";
 
 import { useGamesStoreBasket } from "../stores/gamesBasket";
 
 const route = useRoute();
 const router = useRouter();
+
+const favoriteGamesStore = useFavoriteGames();
 
 const isAddGameButtonActive = ref(true);
 
@@ -80,6 +86,11 @@ const imageLoading = (img: string) => {
 const isInBasket = computed(() => {
   isAddGameButtonActive.value = true;
   return gamesStoreBasket.gamesBasket.find((game) => game.id === props.game.id);
+});
+
+const isInLibrary = computed(() => {
+  isAddGameButtonActive.value = true;
+  return favoriteGamesStore.getFavoriteIds.find((id) => id === props.game.id);
 });
 </script>
 

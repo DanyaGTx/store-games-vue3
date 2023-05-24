@@ -13,7 +13,9 @@
 
         <div class="flex flex-col justify-between">
           <div class="text-white">
-            <h1 class="text-[30px] font-bold">
+            <h1
+              class="text-[30px] font-bold max-[450px]:text-[25px] max-[350px]:text-[20px]"
+            >
               {{ gameDetails.name }}
             </h1>
             <div class="flex gap-3 flex-wrap max-w-[500px] mt-1">
@@ -47,7 +49,7 @@
             </div>
           </div>
 
-          <div @click.stop>
+          <div v-if="!isInLibrary" @click.stop>
             <el-button
               class="w-full max-w-[300px]"
               v-if="!isInBasket"
@@ -65,6 +67,7 @@
               >Delete from cart</el-button
             >
           </div>
+          <div v-else class="text-green-500 font-bold">In Library</div>
         </div>
       </div>
       <div class="text-white mt-5">
@@ -83,19 +86,19 @@
         </video>
       </div>
     </div>
-    <div v-else class="absolute right-[48%]">
+    <div v-else class="absolute left-[50%]">
       <img class="w-[100px]" src="../assets/loader.gif" alt="" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { watch } from "fs";
 import { onMounted, ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { api } from "../api/api";
 import { useGamesStoreBasket } from "../stores/gamesBasket";
-
+import { useFavoriteGames } from "../stores/favoriteGames";
+const favoriteGamesStore = useFavoriteGames();
 const route = useRoute();
 const router = useRouter();
 
@@ -191,6 +194,13 @@ const isInBasket = computed(() => {
   isAddGameButtonActive.value = true;
   return gamesStoreBasket.gamesBasket.find(
     (game) => game.id === gameDetails.value?.id
+  );
+});
+
+const isInLibrary = computed(() => {
+  isAddGameButtonActive.value = true;
+  return favoriteGamesStore.getFavoriteIds.find(
+    (id) => id === Number(route.params.id)
   );
 });
 
