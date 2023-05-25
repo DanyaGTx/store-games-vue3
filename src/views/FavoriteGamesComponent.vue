@@ -61,7 +61,7 @@
     </div>
     <div class="">
       <img
-        class="m-auto w-full max-w-[200px] absolute bottom-0 max-[600px]:bottom-[-55px]"
+        class="m-auto w-full max-w-[200px] absolute bottom-0 max-[600px]:hidden"
         v-if="!isGamesLoading && !favoriteGamesStore.getFavoriteIds.length"
         src="../assets/nothingInLibrary.png"
         alt=""

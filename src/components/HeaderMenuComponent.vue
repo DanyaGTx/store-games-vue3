@@ -9,7 +9,7 @@
             :src="userDataStore.getUserProfileAvatar"
             alt=""
           />
-          <img v-else src="../assets/user.png" alt="" />
+          <img v-else width="50" src="../assets/user.png" alt="" />
         </div>
 
         <h3 class="text-white">{{ getCurrentUser }}</h3>

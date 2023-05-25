@@ -199,6 +199,9 @@ const isInLibrary = computed(() => {
 });
 
 onMounted(() => {
+  window.scrollTo({
+    top: 0,
+  });
   SwiperRegister();
 
   getGameById(+route.params.id);
