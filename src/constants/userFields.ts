@@ -1,6 +1,4 @@
 import { useUserDataStore } from "../stores/userData";
-import { useGamesStoreBasket } from "../stores/gamesBasket";
-import { useFavoriteGames } from "../stores/favoriteGames";
 import { getAuth } from "firebase/auth";
 
 export default {

@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-
 import StoreComponent from "../views/StoreComponent.vue";
 import FavoriteGamesComponent from "../views/FavoriteGamesComponent.vue";
 import MainUIVue from "../components/MainUI.vue";
@@ -7,6 +6,7 @@ import RegisterComponent from "../views/RegisterComponent.vue";
 import LoginComponent from '../views/LoginComponent.vue'
 import SettingsComponent from "../views/ProfileComponent.vue";
 import GameCardDetails from "../components/GameCardDetails.vue";
+import NewsComponent from '../views/NewsComponent.vue'
 import { getAuth,onAuthStateChanged } from 'firebase/auth'
 import { useToast } from "vue-toastification";
 import { toastOptions } from "../toast/toastOptions";
@@ -38,6 +38,18 @@ const router = createRouter({
       children: [{ path: "", name: "route.favorite", component: FavoriteGamesComponent }],
     },
     {
+      path: `/news`,
+      name: "news",
+      redirect: {
+        name: 'route.news'
+      },
+      component: MainUIVue,
+      meta: {
+        requiresAuth: false
+      },
+      children: [{ path: "", name: "route.news", component: NewsComponent }],
+    },
+    {
       path: `/login`,
       name: "login",
       component: LoginComponent,
@@ -67,7 +79,7 @@ const router = createRouter({
       },
       component: MainUIVue,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       },
       children: [{ path: "", name: "route.game-details", component: GameCardDetails }],
     },

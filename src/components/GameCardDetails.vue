@@ -55,7 +55,7 @@
               v-if="!isInBasket"
               @click="addGameToCart"
               type="success"
-              :disabled="!isAddGameButtonActive"
+              :disabled="!isAddGameButtonActive && auth.currentUser"
               >Add to cart</el-button
             >
             <el-button
@@ -98,10 +98,11 @@ import { useRouter, useRoute } from "vue-router";
 import { api } from "../api/api";
 import { useGamesStoreBasket } from "../stores/gamesBasket";
 import { useFavoriteGames } from "../stores/favoriteGames";
+import { getAuth } from "@firebase/auth";
 const favoriteGamesStore = useFavoriteGames();
 const route = useRoute();
 const router = useRouter();
-
+const auth = getAuth();
 const gamesStoreBasket = useGamesStoreBasket();
 const isAddGameButtonActive = ref(true);
 type GENRES = {

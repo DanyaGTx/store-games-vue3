@@ -21,7 +21,7 @@
         v-if="!isInBasket"
         @click="addGameToCart(game.id)"
         type="success"
-        :disabled="!isAddGameButtonActive"
+        :disabled="!isAddGameButtonActive && auth.currentUser"
         >Add to cart</el-button
       >
       <el-button v-else @click="deleteGameFromCart(game.id)" type="info" plain
@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { Loading } from "@element-plus/icons-vue";
+import { getAuth } from "@firebase/auth";
 import { computed, onMounted, ref } from "vue";
 
 import { useRouter, useRoute } from "vue-router";
@@ -49,7 +49,7 @@ const router = useRouter();
 const favoriteGamesStore = useFavoriteGames();
 
 const isAddGameButtonActive = ref(true);
-
+const auth = getAuth();
 const props = defineProps<{
   game: GAME;
   isLoading: boolean;

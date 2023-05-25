@@ -16,13 +16,8 @@
           /></router-link>
         </div>
         <div class="flex items-center">
-          <router-link class="text-white ml-[10px]" :to="{ name: '' }"
-            ><img src="../assets/menu/menu-library.svg" alt=""
-          /></router-link>
-        </div>
-        <div class="flex items-center">
-          <router-link class="text-white ml-[10px]" :to="{ name: '' }"
-            ><img src="../assets/menu/menu-library.svg" alt=""
+          <router-link class="text-white ml-[10px]" :to="{ name: 'news' }"
+            ><img src="../assets/menu/menu-community.svg" alt=""
           /></router-link>
         </div>
       </nav>
@@ -47,14 +42,8 @@
         </div>
         <div class="flex items-center">
           <img src="../assets/menu/menu-community.svg" alt="" />
-          <router-link class="text-white ml-[10px]" :to="{ name: '' }"
-            >Library</router-link
-          >
-        </div>
-        <div class="flex items-center">
-          <img src="../assets/menu/menu-profile.svg" alt="" />
-          <router-link class="text-white ml-[10px]" :to="{ name: '' }"
-            >Library</router-link
+          <router-link class="text-white ml-[10px]" :to="{ name: 'news' }"
+            >Community</router-link
           >
         </div>
       </nav>

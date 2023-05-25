@@ -11,29 +11,30 @@
     </div>
     <div
       v-if="!isGamesLoading && favoriteGames.length"
-      class="text-white mb-[20px] max-[450px]:m-[20px] animate__animated animate__fadeIn"
+      class="text-white mb-[10px] mt-[20px] max-[450px]:m-[20px] mr-[15px] animate__animated animate__fadeIn"
       v-for="game in favoriteGames"
     >
       <div
-        class="flex gap-2 max-[450px]:flex-col max-[380px]:border-blue-500 max-[380px]:border-2 max-[380px]:p-[10px] max-[380px]:rounded-md"
+        class="flex gap-2 max-[450px]:flex-col max-[380px]:border-blue-500 max-[380px]:border-2 max-[380px]:p-[10px] max-[380px]:rounded-md bg-slate-600 p-[10px] rounded-md"
         :class="game.isDeleting ? 'animate__animated animate__zoomOut' : ''"
       >
-        <div @click="openCardDetails(game.id)" class="">
+        <div
+          @click="openCardDetails(game.id)"
+          class="max-w-[200px] min-[450px]:min-h-[220px] max-[450px]:max-w-full"
+        >
           <img
-            class="cursor-pointer max-w-[200px] h-[150px] object-cover max-[450px]:max-w-full"
+            class="cursor-pointer w-full h-full object-cover min-[450px]:min-w-[200px] max-[450px]:max-w-full rounded-lg"
             :src="game.background_image"
             alt=""
           />
         </div>
 
-        <div
-          class="flex flex-col justify-between max-[450px]:flex-row max-[380px]:flex-col"
-        >
+        <div class="flex flex-col justify-between max-[450px]:flex-col">
           <div>
-            <h2>
-              {{ game.name }}
-            </h2>
-            <div>
+            <h2>{{ game.name }}</h2>
+            <h3>Date of Release: {{ game.released }}</h3>
+            <h3>Rating: {{ game.rating }}</h3>
+            <div class="mb-[10px]">
               <a
                 class="text-blue-500 underline"
                 :href="game.website"
@@ -52,9 +53,19 @@
     </div>
     <div
       v-else-if="!isGamesLoading && !favoriteGamesStore.getFavoriteIds.length"
-      class="text-[20px] text-white"
+      class="text-[20px] text-[#cdcdcd] max-[650px]:text-[18px] max-[370px]:text-[16px] max-[350px]:text-[14px]"
     >
-      <p>You dont have favourite games :(</p>
+      <p class="text-center max-[650px]:text-left">
+        You don't have favourite games yet :(
+      </p>
+    </div>
+    <div class="absolute bottom-0">
+      <img
+        class="m-auto w-full"
+        v-if="!isGamesLoading && !favoriteGamesStore.getFavoriteIds.length"
+        src="../assets/nothingInLibrary.png"
+        alt=""
+      />
     </div>
   </div>
 </template>
@@ -101,8 +112,17 @@ const getGamesForLibrary = async () => {
     const gameResults = await Promise.all(gamePromises);
     gameResults.forEach((result) => {
       console.log("GAME RESULT", result.data);
-      const { id, name, website, background_image } = result.data;
-      games.push({ id, website, name, background_image, isDeleting: false });
+      const { id, name, website, background_image, rating, released } =
+        result.data;
+      games.push({
+        id,
+        website,
+        name,
+        background_image,
+        released,
+        rating,
+        isDeleting: false,
+      });
     });
     favoriteGames.value = games;
   } catch (error) {
@@ -143,6 +163,8 @@ interface GAME {
   website: string;
   background_image: string;
   isDeleting: boolean;
+  released: string;
+  rating: string;
 }
 
 const openCardDetails = (id: number) => {

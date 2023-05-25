@@ -7,6 +7,7 @@
           src="../assets/recycle-bin.svg"
         />
         <div
+          :class="{ hidden: !auth.currentUser }"
           class="min-w-[25px] h-[25px] rounded-full bg-blue-400 absolute top-[5px] right-[5px] flex justify-center items-center"
         >
           <span class="text-black">{{ calculatedGamesAmount }}</span>
@@ -20,18 +21,21 @@
             <template v-if="calculatedGamesAmount">
               <div class="flex flex-col justify-between">
                 <div
+                  @click="openCardDetails(game.id)"
                   v-for="game in gamesStore.getAllGamesInCart"
-                  class="border-2 border-red-400 flex gap-2 justify-between items-center p-[10px] mb-[10px]"
+                  class="border-b-2 border-b-red-400 flex gap-2 justify-between items-center p-[10px] mb-[10px] hover:bg-gray-200 cursor-pointer"
                 >
                   <div>
-                    <h2>{{ game.name }}</h2>
+                    <h2>
+                      {{ game.name }}
+                    </h2>
                     <h3>Rating: {{ game.rating }}</h3>
                   </div>
                   <span
-                    @click="deleteGame(game.id)"
+                    @click.stop="deleteGame(game.id)"
                     class="text-red-900 text-[20px] cursor-pointer"
-                    >X</span
-                  >
+                    ><img src="../assets/delete-ico.svg" alt=""
+                  /></span>
                 </div>
               </div>
             </template>
@@ -39,7 +43,7 @@
               <div class="">
                 <img
                   class="w-[50px] opacity-50 m-auto"
-                  src="../assets/nothingInCart.png "
+                  src="../assets/nothingInCart.png"
                   alt=""
                 />
                 <h3 class="text-center mt-[10px]">Nothing in cart</h3>
@@ -71,19 +75,14 @@ import { useFavoriteGames } from "../stores/favoriteGames";
 import { useToast } from "vue-toastification";
 import { toastOptions } from "../toast/toastOptions";
 import { getAuth } from "firebase/auth";
-import {
-  collection,
-  doc,
-  setDoc,
-  getDoc,
-  updateDoc,
-  deleteField,
-} from "firebase/firestore";
+import { collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
+import { useRouter } from "vue-router";
 const toast = useToast();
 const gamesStore = useGamesStoreBasket();
 const favoriteGames = useFavoriteGames();
-
+const auth = getAuth();
+const router = useRouter();
 const calculatedGamesAmount = computed(() => {
   return gamesStore.gamesBasket.length;
 });
@@ -91,7 +90,7 @@ const calculatedGamesAmount = computed(() => {
 const deleteGame = (id: number) => {
   gamesStore.deleteGame(id);
 };
-const auth = getAuth();
+
 const addToFavorite = async () => {
   let favouriteGames = [] as number[];
   gamesStore.getAllGamesInCart.forEach((game) => {
@@ -106,5 +105,12 @@ const addToFavorite = async () => {
       gamesInCart: [],
     });
   }
+};
+
+const openCardDetails = (id: number) => {
+  router.push({ path: `/store` });
+  setTimeout(() => {
+    router.push({ path: `/store/card/${id}` });
+  }, 100);
 };
 </script>
