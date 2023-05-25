@@ -5,5 +5,6 @@ export default (api: AxiosInstance) => ({
       api.get(`/games?page=${page}&search=${search}&page_size=20`),
     getGameById: (id: number) =>
       api.get(`/games/${id}`),
-    getGameTrailer: (id: number) => api.get(`/games/${id}/movies`)
+    getGameTrailer: (id: number) => api.get(`/games/${id}/movies`),
+    getGameScreenShots: (id: number) => api.get(`/games/${id}/screenshots`),
 })

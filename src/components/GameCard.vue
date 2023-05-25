@@ -11,8 +11,8 @@
           :src="game.background_image"
           alt=""
         />
-        <h3>{{ game.name }}</h3>
-        <span>Rating: {{ game.rating }}</span>
+        <h3 class="text-[18px] text-white">{{ game.name }}</h3>
+        <span class="text-black text-[16px]">Rating: {{ game.rating }}</span>
       </div>
     </div>
     <div v-if="!isInLibrary" @click.stop class="text-right m-[20px]">

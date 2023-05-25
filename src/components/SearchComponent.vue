@@ -1,5 +1,7 @@
 <template>
-  <div class="relative w-full max-w-[500px] max-[1000px]:max-w-[300px] m-auto">
+  <div
+    class="relative w-full max-w-[500px] max-[1000px]:max-w-[300px] m-auto translate-y-1"
+  >
     <input
       v-model="searchQuery"
       placeholder="Search"

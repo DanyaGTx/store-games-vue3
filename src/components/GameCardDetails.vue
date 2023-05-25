@@ -1,11 +1,11 @@
 <template>
   <div class="max-w-[1400px] bg-[#252836] p-4">
     <div v-if="gameDetails">
-      <el-button @click="$router.go(-1)" class="mb-[20px]">Back</el-button>
+      <el-button @click="goBack" class="mb-[20px]">Back</el-button>
       <div class="flex gap-3 max-[1200px]:block">
         <div>
           <img
-            class="max-w-[600px] h-full w-full object-cover"
+            class="max-w-[480px] h-full max-[1200px]:h-[250px] max-[600px]:h-[200px] w-full object-cover"
             :src="gameDetails.background_image"
             alt=""
           />
@@ -85,6 +85,28 @@
           Your browser does not support the video tag.
         </video>
       </div>
+      <div v-else class="mt-[50px]">
+        <div
+          v-if="!isScreenShotsLoading && gameScreenShots?.length"
+          class="grid grid-cols-3 gap-3 max-[1100px]:grid-cols-2 max-[750px]:grid-cols-1"
+        >
+          <div
+            v-for="screenshot in gameScreenShots"
+            :key="screenshot.id"
+            class="max-w-[500px] animate__animated animate__fadeIn"
+          >
+            <img
+              @load="lazyLoadScreenShotsAnimation"
+              class="h-full w-full object-cover"
+              :src="screenshot.image"
+              alt=""
+            />
+          </div>
+        </div>
+        <div v-else class="absolute left-[50%]">
+          <img class="w-[100px]" src="../assets/loader.gif" alt="" />
+        </div>
+      </div>
     </div>
     <div v-else class="absolute left-[50%]">
       <img class="w-[100px]" src="../assets/loader.gif" alt="" />
@@ -99,69 +121,28 @@ import { api } from "../api/api";
 import { useGamesStoreBasket } from "../stores/gamesBasket";
 import { useFavoriteGames } from "../stores/favoriteGames";
 import { getAuth } from "@firebase/auth";
+import { register as SwiperRegister } from "swiper/element/bundle";
+import "animate.css";
 const favoriteGamesStore = useFavoriteGames();
 const route = useRoute();
 const router = useRouter();
 const auth = getAuth();
 const gamesStoreBasket = useGamesStoreBasket();
 const isAddGameButtonActive = ref(true);
-type GENRES = {
-  games_count: number;
-  id: number;
-  image_background: string;
-  name: string;
-  slug: string;
-};
-
-type ESRB_RATING = {
-  id: number;
-  name: string;
-  slug: string;
-};
-
-type ADDED_BY_STATUS = {
-  beaten: number;
-  dropped: number;
-  owned: number;
-  playing: number;
-  toplay: number;
-  yet: number;
-};
-
-type DEVELOEPRS = {
-  name: string;
-};
-
-interface GAME_DETAILS {
-  added: number;
-  added_by_status: ADDED_BY_STATUS;
-  background_image: string;
-  clip: null;
-  dominant_color: string;
-  esrb_rating: ESRB_RATING[];
-  genres: GENRES[];
-  id: number;
-  description: string;
-  name: string;
-  released: string;
-  developers: DEVELOEPRS[];
-  rating: string;
-  stores: {
-    store: {
-      name: string;
-    };
-  }[];
-}
-
-interface GAME {
-  name: string;
-  id: number;
-  rating: number;
-  background_image: string;
-}
-
+const isScreenShotsLoading = ref(false);
 const gameDetails = ref<GAME_DETAILS>();
+const gameScreenShots = ref<SCREENSHOT[]>();
 const gameTrailer = ref();
+
+const lazyLoadScreenShotsAnimation = (event: Event) => {
+  const target = event.target as HTMLImageElement;
+  target.classList.add("animate__animated", "animate__fadeIn");
+};
+
+const goBack = () => {
+  router.go(-1);
+};
+
 const addGameToCart = () => {
   isAddGameButtonActive.value = false;
   if (gameDetails.value?.id) {
@@ -191,6 +172,18 @@ const getGameTrailer = async (id: number) => {
   }
 };
 
+const getGameScreenShots = async (id: number) => {
+  try {
+    isScreenShotsLoading.value = true;
+    const { data } = await api.games.getGameScreenShots(id);
+    gameScreenShots.value = data.results;
+  } catch (e) {
+    console.log(e);
+  } finally {
+    isScreenShotsLoading.value = false;
+  }
+};
+
 const isInBasket = computed(() => {
   isAddGameButtonActive.value = true;
   return gamesStoreBasket.gamesBasket.find(
@@ -206,10 +199,82 @@ const isInLibrary = computed(() => {
 });
 
 onMounted(() => {
+  SwiperRegister();
+
   getGameById(+route.params.id);
   getGameTrailer(+route.params.id);
+  getGameScreenShots(+route.params.id);
   console.log("router: ", route.params.id);
+
+  console.log("SCREENSGOTSSS", gameScreenShots.value);
 });
+
+// вынести в отдельный файл
+type GENRES = {
+  games_count: number;
+  id: number;
+  image_background: string;
+  name: string;
+  slug: string;
+};
+
+type ESRB_RATING = {
+  id: number;
+  name: string;
+  slug: string;
+};
+
+type ADDED_BY_STATUS = {
+  beaten: number;
+  dropped: number;
+  owned: number;
+  playing: number;
+  toplay: number;
+  yet: number;
+};
+
+type DEVELOEPRS = {
+  name: string;
+};
+
+type SCREENSHOT = {
+  height: number;
+  width: number;
+  id: number;
+  image: string;
+};
+
+interface GAME_DETAILS {
+  added: number;
+  added_by_status: ADDED_BY_STATUS;
+  background_image: string;
+  clip: null;
+  dominant_color: string;
+  esrb_rating: ESRB_RATING[];
+  genres: GENRES[];
+  id: number;
+  description: string;
+  name: string;
+  released: string;
+  developers: DEVELOEPRS[];
+  rating: string;
+  stores: {
+    store: {
+      name: string;
+    };
+  }[];
+}
+
+interface GAME {
+  name: string;
+  id: number;
+  rating: number;
+  background_image: string;
+}
 </script>
 
-<style lang="scss" scoped></style>
+<style>
+.swiper-pagination-bullet-active {
+  background-color: #000;
+}
+</style>

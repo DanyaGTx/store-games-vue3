@@ -38,22 +38,15 @@ import { useRouter } from "vue-router";
 import { ElPagination } from "element-plus";
 //@ts-ignore
 import debounce from "lodash.debounce";
-
 import GameCard from "../components/GameCard.vue";
 import { useWindowSize } from "@vueuse/core";
-
 import { useAllGamesStore } from "../stores/allGames";
-import { useGamesStoreBasket } from "../stores/gamesBasket";
 import { useToast } from "vue-toastification";
-
 import { toastOptions } from "../toast/toastOptions";
 import { getAuth } from "@firebase/auth";
 const toast = useToast();
-
 const router = useRouter();
-
 const allGamesStore = useAllGamesStore();
-const gamesBasket = useGamesStoreBasket();
 const { width } = useWindowSize();
 
 interface GAME {
@@ -74,6 +67,7 @@ const currentPage = ref(1);
 const setCurrentPage = (page: number) => {
   isLoading.value = true;
   currentPage.value = page;
+  localStorage.setItem("currentPage", String(page));
   window.scrollTo({
     top: 0,
   });
@@ -116,7 +110,6 @@ watch(currentPage, (newPage) => {
 watch(
   () => props.searchQuery,
   debounce(async (searchQuery: string) => {
-    setCurrentPage(1);
     await fetchGamesWithSearch(currentPage.value, searchQuery);
   }, 1000)
 );
@@ -137,7 +130,9 @@ onMounted(async () => {
     isLoading.value = false;
   }
 
-  console.log(games.value);
+  const currentPageFromLocal = localStorage.getItem("currentPage");
+  console.log("Можно сетать страницу", currentPageFromLocal);
+  currentPage.value = Number(currentPageFromLocal);
 });
 </script>
 
