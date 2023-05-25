@@ -2,7 +2,7 @@
   <div v-if="getIsLoggedIn">
     <el-dropdown trigger="click">
       <div class="flex items-center el-dropdown-link cursor-pointer">
-        <div class="mr-[10px] w-[50px] h-[50px]">
+        <div class="mr-[10px] min-w-[50px] h-[50px]">
           <img
             v-if="getCurrentAvatar"
             class="object-cover rounded-[50%] w-[50px] h-[50px]"

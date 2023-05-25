@@ -59,9 +59,9 @@
         You don't have favourite games yet :(
       </p>
     </div>
-    <div class="absolute bottom-0">
+    <div class="">
       <img
-        class="m-auto w-full"
+        class="m-auto w-full max-w-[200px] absolute bottom-0 max-[600px]:bottom-[-55px]"
         v-if="!isGamesLoading && !favoriteGamesStore.getFavoriteIds.length"
         src="../assets/nothingInLibrary.png"
         alt=""
