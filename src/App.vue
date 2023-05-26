@@ -16,10 +16,6 @@ const loadCartGamesFromDatabase = async () => {
 };
 const favoriteGamesStore = useFavoriteGames();
 onMounted(async () => {
-  const currentPageFromLocal = localStorage.getItem("currentPage");
-  if (currentPageFromLocal === null) {
-    localStorage.setItem("currentPage", "1");
-  }
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       console.log("User is logged in", user);

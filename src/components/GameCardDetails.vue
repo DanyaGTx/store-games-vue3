@@ -73,7 +73,6 @@
       <div class="text-white mt-5">
         <p v-html="gameDetails.description"></p>
       </div>
-
       <div v-if="gameTrailer.results.length" class="text-center m-auto">
         <video
           :poster="gameTrailer.results[0].preview"

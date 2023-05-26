@@ -9,10 +9,10 @@
         Game store
       </h1>
     </div>
-    <div class="flex justify-center items-center w-full">
+    <div class="flex justify-center items-center w-full max-[440px]:block">
       <SearchComponent @search-query="searchQuery" />
       <div class="mr-[100px] max-[1150px]:mr-[0px] max-[600px]:mt-[10px]">
-        <div class="flex items-center">
+        <div class="flex items-center justify-end">
           <BasketComponent />
           <HeaderMenuComponent />
         </div>

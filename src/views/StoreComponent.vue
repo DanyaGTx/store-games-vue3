@@ -20,7 +20,7 @@
           :current-page="currentPage"
           background
           layout="prev, pager, next"
-          :total="1000"
+          :total="10000"
           :small="calculatedSizePagination"
           :pager-count="calculatedSizePagerCount"
         />
@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch, computed } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { ElPagination } from "element-plus";
 //@ts-ignore
 import debounce from "lodash.debounce";
@@ -46,6 +46,7 @@ import { toastOptions } from "../toast/toastOptions";
 import { getAuth } from "@firebase/auth";
 const toast = useToast();
 const router = useRouter();
+const route = useRoute();
 const allGamesStore = useAllGamesStore();
 const { width } = useWindowSize();
 
@@ -67,7 +68,8 @@ const currentPage = ref(1);
 const setCurrentPage = (page: number) => {
   isLoading.value = true;
   currentPage.value = page;
-  localStorage.setItem("currentPage", String(page));
+  router.push("/store?page=" + String(page));
+
   window.scrollTo({
     top: 0,
   });
@@ -116,6 +118,18 @@ watch(
 
 const user = getAuth().currentUser;
 onMounted(async () => {
+  // set page from query url
+  if (route.query.page) {
+    if (+route.query.page > 1000) {
+      toast.warning("Hey, maximum 1000 pages", toastOptions);
+      currentPage.value = 1000;
+    } else if (+route.query.page < 1) {
+      toast.warning("Wow, what you are trying to find ?)", toastOptions);
+      currentPage.value = 1;
+    } else {
+      currentPage.value = +route.query.page;
+    }
+  }
   try {
     if (user?.email) {
       console.log(user.email);
@@ -129,10 +143,6 @@ onMounted(async () => {
     toast.error("Error: " + error, toastOptions);
     isLoading.value = false;
   }
-
-  const currentPageFromLocal = localStorage.getItem("currentPage");
-  console.log("Можно сетать страницу", currentPageFromLocal);
-  currentPage.value = Number(currentPageFromLocal);
 });
 </script>
 
