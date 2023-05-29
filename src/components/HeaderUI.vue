@@ -4,7 +4,7 @@
   >
     <div @click="$router.push('/')" class="flex items-center justify-center">
       <h1
-        class="text-white text-[30px] font-popins font-semibold min-w-[180px] cursor-pointer ease-in duration-300 hover:text-[#22a1bd]"
+        class="text-white text-[30px] font-popins font-semibold min-w-[180px] cursor-pointer ease-in duration-300 hover:text-[#22a1bd] max-[440px]:hidden"
       >
         Game store
       </h1>
@@ -12,9 +12,16 @@
     <div class="flex justify-center items-center w-full max-[440px]:block">
       <SearchComponent @search-query="searchQuery" />
       <div class="mr-[100px] max-[1150px]:mr-[0px] max-[600px]:mt-[10px]">
-        <div class="flex items-center justify-end">
-          <BasketComponent />
-          <HeaderMenuComponent />
+        <div class="flex items-center justify-between">
+          <h1
+            class="text-white text-[30px] font-popins font-semibold cursor-pointer ease-in duration-300 hover:text-[#22a1bd] min-[441px]:hidden max-[360px]:text-[25px] max-[340px]:text-[22px]"
+          >
+            Game store
+          </h1>
+          <div class="flex items-center">
+            <BasketComponent />
+            <HeaderMenuComponent />
+          </div>
         </div>
       </div>
     </div>

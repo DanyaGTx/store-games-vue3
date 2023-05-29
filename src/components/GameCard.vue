@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-w-[180px] max-w-[280px] max-[1100px]:max-w-[380px] max-[750px]:h-[450px] h-[350px] bg-[#49537d] rounded-lg flex flex-col justify-between cursor-pointer max-[500px]:h-[300px]"
+    class="min-w-[180px] max-w-[280px] max-[1100px]:max-w-[380px] max-[750px]:min-h-[350px] min-h-[350px] bg-[#49537d] rounded-lg flex flex-col justify-between cursor-pointer max-[500px]:h-[300px]"
   >
     <div class="p-[10px]">
       <div class="h-[200px] w-full">
@@ -11,8 +11,15 @@
           :src="game.background_image"
           alt=""
         />
-        <h3 class="text-[18px] text-white">{{ game.name }}</h3>
-        <span class="text-gray-200 text-[16px]">Rating: {{ game.rating }}</span>
+        <h3
+          class="text-[18px] text-white max-[750px]:text-[30px] max-[500px]:text-[24px]"
+        >
+          {{ game.name }}
+        </h3>
+        <span
+          class="text-gray-200 text-[16px] max-[750px]:text-[24px] max-[500px]:text-[16px]"
+          >Rating: {{ game.rating }}</span
+        >
       </div>
     </div>
     <div v-if="!isInLibrary" @click.stop class="text-right m-[20px]">
@@ -27,7 +34,10 @@
         >Delete from cart</el-button
       >
     </div>
-    <div v-else class="text-right m-[20px] text-green-500 font-bold">
+    <div
+      v-else
+      class="text-right m-[20px] text-green-500 font-bold max-[750px]:text-[24px] max-[500px]:text-[20px]"
+    >
       In Library
     </div>
   </div>
