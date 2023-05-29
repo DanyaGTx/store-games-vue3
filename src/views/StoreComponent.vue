@@ -34,33 +34,31 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch, computed } from "vue";
+import { useWindowSize } from "@vueuse/core";
 import { useRoute, useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
 import { ElPagination } from "element-plus";
+import { getAuth } from "@firebase/auth";
 //@ts-ignore
 import debounce from "lodash.debounce";
 import GameCard from "../components/GameCard.vue";
-import { useWindowSize } from "@vueuse/core";
 import { useAllGamesStore } from "../stores/allGames";
-import { useToast } from "vue-toastification";
 import { toastOptions } from "../toast/toastOptions";
-import { getAuth } from "@firebase/auth";
-const toast = useToast();
-const router = useRouter();
+
 const route = useRoute();
+const router = useRouter();
+
+const toast = useToast();
+
 const allGamesStore = useAllGamesStore();
+
 const { width } = useWindowSize();
 
-interface GAME {
-  name: string;
-  id: number;
-  rating: number;
-  background_image: string;
-}
 const props = defineProps<{
   searchQuery: string;
+  resetedCurrentPage: number;
 }>();
 
-const games = ref<GAME[]>([]);
 const isLoading = ref(false);
 const isError = ref(false);
 const currentPage = ref(1);
@@ -69,7 +67,6 @@ const setCurrentPage = (page: number) => {
   isLoading.value = true;
   currentPage.value = page;
   router.push("/store?page=" + String(page));
-
   window.scrollTo({
     top: 0,
   });
@@ -112,13 +109,14 @@ watch(currentPage, (newPage) => {
 watch(
   () => props.searchQuery,
   debounce(async (searchQuery: string) => {
+    setCurrentPage(1);
     await fetchGamesWithSearch(currentPage.value, searchQuery);
   }, 1000)
 );
 
 const user = getAuth().currentUser;
 onMounted(async () => {
-  // set page from query url
+  // setting page from query url
   if (route.query.page) {
     if (+route.query.page > 1000) {
       toast.warning("Hey, maximum 1000 pages", toastOptions);

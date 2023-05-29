@@ -71,17 +71,20 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
 import { onMounted, ref, watch, markRaw } from "vue";
+import { useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
 import { storeToRefs } from "pinia";
-import { useFavoriteGames } from "../stores/favoriteGames";
-import { api } from "../api/api";
 import { ElMessageBox } from "element-plus";
 import { Delete } from "@element-plus/icons-vue";
+import { api } from "../api/api";
+import { useFavoriteGames } from "../stores/favoriteGames";
+import { GAME } from "../intrerfaces/types";
+import { toastOptions } from "../toast/toastOptions";
 import "animate.css";
 const favoriteGames = ref<GAME[]>([]);
 const isGamesLoading = ref(true);
-
+const toast = useToast();
 const favoriteGamesStore = useFavoriteGames();
 const { favoriteGamesIds } = storeToRefs(favoriteGamesStore);
 const router = useRouter();
@@ -90,14 +93,12 @@ onMounted(async () => {
     top: 0,
   });
   try {
-    console.log("Грузимся");
     isGamesLoading.value = true;
     await favoriteGamesStore.getFavoriteGamesFromDB();
-    isGamesLoading.value = false;
   } catch (e) {
-    console.log(e);
+    toast.error("Error" + e, toastOptions);
   } finally {
-    console.log("отключаем загрузку");
+    isGamesLoading.value = false;
   }
 });
 
@@ -108,10 +109,9 @@ const getGamesForLibrary = async () => {
   );
   const games = [] as GAME[];
   try {
-    // isGamesLoading.value = true;
+    isGamesLoading.value = true;
     const gameResults = await Promise.all(gamePromises);
     gameResults.forEach((result) => {
-      console.log("GAME RESULT", result.data);
       const { id, name, website, background_image, rating, released } =
         result.data;
       games.push({
@@ -128,7 +128,7 @@ const getGamesForLibrary = async () => {
   } catch (error) {
     console.error("Error fetching game data:", error);
   } finally {
-    // isGamesLoading.value = false;
+    isGamesLoading.value = false;
   }
 };
 
@@ -151,21 +151,10 @@ const deleteGameFromFavorite = async (id: number) => {
     setTimeout(async () => {
       await favoriteGamesStore.deleteGameFromLibrary(id);
     }, 600);
-    // Perform deletion logic here
   } catch (error) {
     return error;
   }
 };
-
-interface GAME {
-  name: string;
-  id: number;
-  website: string;
-  background_image: string;
-  isDeleting: boolean;
-  released: string;
-  rating: string;
-}
 
 const openCardDetails = (id: number) => {
   router.push({
@@ -177,7 +166,6 @@ const openCardDetails = (id: number) => {
 watch(
   () => favoriteGamesIds,
   async (newIds, oldIds) => {
-    console.log("favoriteGamesIds Changed");
     await getGamesForLibrary();
   },
   { deep: true }

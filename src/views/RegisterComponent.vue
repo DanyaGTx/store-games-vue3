@@ -60,26 +60,20 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-
 import { useToast } from "vue-toastification";
-
-import { toastOptions } from "../toast/toastOptions";
 import { doc, getDoc } from "@firebase/firestore";
 import router from "../router/router";
 import createUserCollection from "../firebase/database/createUserCollection";
-import { db } from "../firebase/firebase";
 import { useUserDataStore } from "../stores/userData";
+import { toastOptions } from "../toast/toastOptions";
+import { db } from "../firebase/firebase";
+import { REGISTER } from "../intrerfaces/types";
 const userDataStore = useUserDataStore();
 const ruleFormRef = ref<FormInstance>();
 
 const toast = useToast();
 
-interface Register {
-  email: string;
-  password: string;
-}
-
-const register = ref<Register>({
+const register = ref<REGISTER>({
   email: "",
   password: "",
 });

@@ -1,14 +1,11 @@
 import { defineStore } from 'pinia'
 import { api } from "../api/api";
-
 import { getAuth } from "firebase/auth";
-
 import { useToast } from "vue-toastification";
 import { toastOptions } from "../toast/toastOptions";
-
-import { collection, doc, setDoc, getDoc, updateDoc, deleteField } from "firebase/firestore";
+import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
-
+import { GAME } from '../intrerfaces/types'
 const toast = useToast();
 
 const auth = getAuth()
@@ -23,10 +20,11 @@ export const useGamesStoreBasket = defineStore('gamesBasket', {
       async addGame(id: number) {
         if(auth.currentUser?.email) {
             const { data } = await api.games.getGameById(id);
-            const newGame = {
+            const newGame: GAME = {
               id: data.id,
               name: data.name,
-              rating: data.rating
+              rating: data.rating,
+              background_image: data.background_image,
             }
             this.gamesBasket.push(newGame)
             const usersRef = collection(db, "users");
@@ -69,10 +67,3 @@ export const useGamesStoreBasket = defineStore('gamesBasket', {
       getAllGamesInCart: (state) => state.gamesBasket
     }
   })
-
-  interface GAME {
-    name: string;
-    id: number;
-    rating: number;
-    background_image?: string;
-  }

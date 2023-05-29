@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { api } from '../api/api'
-
+import { GAME } from '../intrerfaces/types'
 export const useAllGamesStore = defineStore('gamesList', {
     state: () => {
       return { 
@@ -12,19 +12,8 @@ export const useAllGamesStore = defineStore('gamesList', {
         async getGamesBySearch(page: number, search: string) {         
           const { data } = await api.games.getGamesWithSearch(page,search);
           this.allGames = data.results;
-          console.log('action', data.results);
         },
-        async getGameByFilter() {
-          
-        }
-        // getGamesByFilter
     }
   })
 
 
-interface GAME {
-    name: string;
-    id: number;
-    rating: number;
-    background_image: string;
-}

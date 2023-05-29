@@ -32,9 +32,6 @@
 
 <script lang="ts" setup>
 import { ref, watch } from "vue";
-import { useAllGamesStore } from "../stores/allGames";
-
-const allGamesStore = useAllGamesStore();
 
 const onSearchIconHover = ref(false);
 

@@ -19,7 +19,7 @@
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="$router.push({ name: 'settings' })"
+          <el-dropdown-item @click="$router.push({ name: 'profile' })"
             >Profile</el-dropdown-item
           >
           <el-dropdown-item @click="handleSignOut">Logout</el-dropdown-item>
@@ -87,7 +87,6 @@ onMounted(() => {
       } else {
         userDataStore.setUserProfileName(user.email);
       }
-      console.log(user);
     } else {
       userDataStore.setIsLoggedInUser(false);
     }

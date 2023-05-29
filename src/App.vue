@@ -8,13 +8,17 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useUserDataStore } from "./stores/userData";
 import { useGamesStoreBasket } from "./stores/gamesBasket";
 import { useFavoriteGames } from "./stores/favoriteGames";
+
 const userDataStore = useUserDataStore();
 const gamesBasket = useGamesStoreBasket();
+const favoriteGamesStore = useFavoriteGames();
+
 const auth = getAuth();
+
 const loadCartGamesFromDatabase = async () => {
   await gamesBasket.setGamesInCart();
 };
-const favoriteGamesStore = useFavoriteGames();
+
 onMounted(async () => {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
@@ -36,7 +40,6 @@ onMounted(async () => {
 <style>
 body {
   background-color: #252836;
-  /* padding: 10px; */
 }
 ::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */

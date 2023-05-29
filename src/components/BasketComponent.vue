@@ -21,7 +21,7 @@
             <template v-if="calculatedGamesAmount">
               <div class="flex flex-col justify-between">
                 <div
-                  @click="openCardDetails(game.id)"
+                  @click="openCardDetailsFromCart(game.id)"
                   v-for="game in gamesStore.getAllGamesInCart"
                   class="border-b-2 border-b-red-400 flex gap-2 justify-between items-center p-[10px] mb-[10px] hover:bg-gray-200 cursor-pointer"
                 >
@@ -69,20 +69,25 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { ElDropdown, ElDropdownMenu } from "element-plus";
-import { useGamesStoreBasket } from "../stores/gamesBasket";
-import { useFavoriteGames } from "../stores/favoriteGames";
+import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
-import { toastOptions } from "../toast/toastOptions";
+import { ElDropdown, ElDropdownMenu } from "element-plus";
 import { getAuth } from "firebase/auth";
 import { collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
-import { useRouter } from "vue-router";
+import { toastOptions } from "../toast/toastOptions";
+import { useGamesStoreBasket } from "../stores/gamesBasket";
+import { useFavoriteGames } from "../stores/favoriteGames";
+
 const toast = useToast();
+
 const gamesStore = useGamesStoreBasket();
 const favoriteGames = useFavoriteGames();
+
 const auth = getAuth();
+
 const router = useRouter();
+
 const calculatedGamesAmount = computed(() => {
   return gamesStore.gamesBasket.length;
 });
@@ -107,7 +112,7 @@ const addToFavorite = async () => {
   }
 };
 
-const openCardDetails = (id: number) => {
+const openCardDetailsFromCart = (id: number) => {
   router.push({ path: `/store` });
   setTimeout(() => {
     router.push({ path: `/store/card/${id}` });

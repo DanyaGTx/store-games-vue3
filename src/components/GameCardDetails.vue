@@ -86,7 +86,7 @@
       </div>
       <div v-else class="mt-[50px]">
         <div
-          v-if="!isScreenShotsLoading && gameScreenShots?.length"
+          v-if="!isScreenShotsLoading"
           class="grid grid-cols-3 gap-3 max-[1100px]:grid-cols-2 max-[750px]:grid-cols-1"
         >
           <div
@@ -95,7 +95,6 @@
             class="max-w-[500px] animate__animated animate__fadeIn"
           >
             <img
-              @load="lazyLoadScreenShotsAnimation"
               class="h-full w-full object-cover"
               :src="screenshot.image"
               alt=""
@@ -115,32 +114,28 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, computed } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { api } from "../api/api";
-import { useGamesStoreBasket } from "../stores/gamesBasket";
-import { useFavoriteGames } from "../stores/favoriteGames";
+import { useRoute } from "vue-router";
 import { getAuth } from "@firebase/auth";
 import { register as SwiperRegister } from "swiper/element/bundle";
+import { useGamesStoreBasket } from "../stores/gamesBasket";
+import { useFavoriteGames } from "../stores/favoriteGames";
+import { GAME_DETAILS, SCREENSHOT } from "../intrerfaces/types";
+import { goBack } from "../utils";
+import { api } from "../api/api";
 import "animate.css";
+
 const favoriteGamesStore = useFavoriteGames();
-const route = useRoute();
-const router = useRouter();
-const auth = getAuth();
 const gamesStoreBasket = useGamesStoreBasket();
+
+const route = useRoute();
+const auth = getAuth();
+
 const isAddGameButtonActive = ref(true);
 const isScreenShotsLoading = ref(false);
-const gameDetails = ref<GAME_DETAILS>();
-const gameScreenShots = ref<SCREENSHOT[]>();
 const gameTrailer = ref();
 
-const lazyLoadScreenShotsAnimation = (event: Event) => {
-  const target = event.target as HTMLImageElement;
-  target.classList.add("animate__animated", "animate__fadeIn");
-};
-
-const goBack = () => {
-  router.go(-1);
-};
+const gameDetails = ref<GAME_DETAILS>();
+const gameScreenShots = ref<SCREENSHOT[]>();
 
 const addGameToCart = () => {
   isAddGameButtonActive.value = false;
@@ -159,7 +154,6 @@ const deleteGameFromCart = () => {
 const getGameById = async (id: number) => {
   const { data } = await api.games.getGameById(id);
   gameDetails.value = data;
-  console.log(gameDetails.value);
 };
 
 const getGameTrailer = async (id: number) => {
@@ -202,77 +196,10 @@ onMounted(() => {
     top: 0,
   });
   SwiperRegister();
-
   getGameById(+route.params.id);
   getGameTrailer(+route.params.id);
   getGameScreenShots(+route.params.id);
-  console.log("router: ", route.params.id);
-
-  console.log("SCREENSGOTSSS", gameScreenShots.value);
 });
-
-// вынести в отдельный файл
-type GENRES = {
-  games_count: number;
-  id: number;
-  image_background: string;
-  name: string;
-  slug: string;
-};
-
-type ESRB_RATING = {
-  id: number;
-  name: string;
-  slug: string;
-};
-
-type ADDED_BY_STATUS = {
-  beaten: number;
-  dropped: number;
-  owned: number;
-  playing: number;
-  toplay: number;
-  yet: number;
-};
-
-type DEVELOEPRS = {
-  name: string;
-};
-
-type SCREENSHOT = {
-  height: number;
-  width: number;
-  id: number;
-  image: string;
-};
-
-interface GAME_DETAILS {
-  added: number;
-  added_by_status: ADDED_BY_STATUS;
-  background_image: string;
-  clip: null;
-  dominant_color: string;
-  esrb_rating: ESRB_RATING[];
-  genres: GENRES[];
-  id: number;
-  description: string;
-  name: string;
-  released: string;
-  developers: DEVELOEPRS[];
-  rating: string;
-  stores: {
-    store: {
-      name: string;
-    };
-  }[];
-}
-
-interface GAME {
-  name: string;
-  id: number;
-  rating: number;
-  background_image: string;
-}
 </script>
 
 <style>

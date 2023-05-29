@@ -3,7 +3,7 @@ import { getAuth } from "firebase/auth";
 
 export default {
     setup() {
-        // fields which will be created in collection when user registered
+        // fields that will be created in collection when user registered
         const auth = getAuth()
         const userDataStore = useUserDataStore();
         const userFields = {

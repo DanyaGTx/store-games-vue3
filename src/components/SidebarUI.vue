@@ -7,17 +7,29 @@
       <nav class="flex flex-col gap-10">
         <div class="flex items-center">
           <router-link class="text-white ml-[10px]" :to="{ name: 'store' }"
-            ><img src="../assets/menu/menu-store.svg" alt=""
+            ><img
+              width="32"
+              height="32"
+              src="../assets/menu/menu-store.svg"
+              alt=""
           /></router-link>
         </div>
         <div class="flex items-center">
           <router-link class="text-white ml-[10px]" :to="{ name: 'favorite' }"
-            ><img src="../assets/menu/menu-library.svg" alt=""
+            ><img
+              width="32"
+              height="32"
+              src="../assets/menu/menu-library.svg"
+              alt=""
           /></router-link>
         </div>
         <div class="flex items-center">
           <router-link class="text-white ml-[10px]" :to="{ name: 'news' }"
-            ><img src="../assets/menu/menu-community.svg" alt=""
+            ><img
+              width="32"
+              height="32"
+              src="../assets/menu/menu-community.svg"
+              alt=""
           /></router-link>
         </div>
       </nav>
@@ -29,19 +41,34 @@
       <h3 class="font-semibold min-[500px]:mb-[20px]">MENU</h3>
       <nav class="flex flex-col gap-10">
         <div class="flex items-center">
-          <img src="../assets/menu/menu-store.svg" alt="" />
+          <img
+            width="32"
+            height="32"
+            src="../assets/menu/menu-store.svg"
+            alt=""
+          />
           <router-link class="text-white ml-[10px]" :to="{ name: 'store' }"
             >Store</router-link
           >
         </div>
         <div class="flex items-center">
-          <img src="../assets/menu/menu-library.svg" alt="" />
+          <img
+            width="32"
+            height="32"
+            src="../assets/menu/menu-library.svg"
+            alt=""
+          />
           <router-link class="text-white ml-[10px]" :to="{ name: 'favorite' }"
             >Favorites</router-link
           >
         </div>
         <div class="flex items-center">
-          <img src="../assets/menu/menu-community.svg" alt="" />
+          <img
+            width="32"
+            height="32"
+            src="../assets/menu/menu-community.svg"
+            alt=""
+          />
           <router-link class="text-white ml-[10px]" :to="{ name: 'news' }"
             >Creators</router-link
           >

@@ -12,11 +12,10 @@
           alt=""
         />
         <h3 class="text-[18px] text-white">{{ game.name }}</h3>
-        <span class="text-black text-[16px]">Rating: {{ game.rating }}</span>
+        <span class="text-gray-200 text-[16px]">Rating: {{ game.rating }}</span>
       </div>
     </div>
     <div v-if="!isInLibrary" @click.stop class="text-right m-[20px]">
-      <!-- если игры в библиотеки, то показывать текст In Library либо disabled чтобы была -->
       <el-button
         v-if="!isInBasket"
         @click="addGameToCart(game.id)"
@@ -35,32 +34,22 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from "vue";
 import { getAuth } from "@firebase/auth";
-import { computed, onMounted, ref } from "vue";
-
-import { useRouter, useRoute } from "vue-router";
 import { useFavoriteGames } from "../stores/favoriteGames";
-
 import { useGamesStoreBasket } from "../stores/gamesBasket";
-
-const route = useRoute();
-const router = useRouter();
+import { GAME } from "../intrerfaces/types";
 
 const favoriteGamesStore = useFavoriteGames();
 
 const isAddGameButtonActive = ref(true);
+
 const auth = getAuth();
+
 const props = defineProps<{
   game: GAME;
   isLoading: boolean;
 }>();
-
-interface GAME {
-  name: string;
-  id: number;
-  rating: number;
-  background_image: string;
-}
 
 const gamesStoreBasket = useGamesStoreBasket();
 

@@ -39,29 +39,23 @@
     <div class="text-[30px] text-white max-[450px]:text-[20px]">
       <div>
         <h3>Your email: {{ getCurrentEmail }}</h3>
-        <h3 v-if="userDataStore.getUserProfileName">
-          Your name: {{ userDataStore.getUserProfileName }}
-        </h3>
-        <!-- ??? -->
-        <div>
-          <el-button
-            type="success"
-            @click="isChangeNameActive = !isChangeNameActive"
-          >
-            Change name
-          </el-button>
-          <div v-show="isChangeNameActive">
-            <el-input
-              class="max-w-[300px]"
-              v-model="userName"
-              placeholder="Your new name"
-              @keyup.enter="setUserName"
-            />
-            <div>
-              <el-button @click="setUserName">Set Name</el-button>
+        <div class="flex items-center">
+          <h3 v-if="userDataStore.getUserProfileName">
+            Your name: {{ userDataStore.getUserProfileName }}
+          </h3>
+          <div>
+            <div class="max-w-[35px] ml-[10px]">
+              <img
+                @click="changeNamePrompt"
+                class="cursor-pointer w-full"
+                src="../assets/edit-icon.svg"
+                alt=""
+              />
             </div>
           </div>
         </div>
+
+        <h3>Favorite games: {{ getFavoriteGamesAmount }}</h3>
       </div>
     </div>
   </div>
@@ -77,21 +71,23 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
-import { ElButton } from "element-plus";
+import { ElMessageBox } from "element-plus";
 import { useToast } from "vue-toastification";
-import { toastOptions } from "../toast/toastOptions";
-import { useUserDataStore } from "../stores/userData";
-import { useGamesStoreBasket } from "../stores/gamesBasket";
 import { collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
+import { useUserDataStore } from "../stores/userData";
+import { useFavoriteGames } from "../stores/favoriteGames";
+import { toastOptions } from "../toast/toastOptions";
+
 const userDataStore = useUserDataStore();
-const gamesBasket = useGamesStoreBasket();
+const favoriteGames = useFavoriteGames();
+
 const toast = useToast();
 
-const userName = ref();
 const displayName = ref();
 const isChangeNameActive = ref(false);
 const isImageChoosable = ref(false);
+
 const uploadImage = (e: any) => {
   const storage = getStorage();
   if (e.target.files && e.target.files.length > 0) {
@@ -146,14 +142,14 @@ const uploadImage = (e: any) => {
 
 const auth = getAuth();
 const user = auth.currentUser;
-const setUserName = () => {
+const setUserName = (newName: string) => {
   if (user) {
     updateProfile(user, {
-      displayName: userName.value,
+      displayName: newName,
     })
       .then(() => {
         toast.success(
-          "You succesfully changed your name to: " + userName.value,
+          "You succesfully changed your name to: " + newName,
           toastOptions
         );
         displayName.value = user.displayName;
@@ -168,6 +164,21 @@ const setUserName = () => {
         toast.error("Error: " + error, toastOptions);
       });
   }
+};
+
+const changeNamePrompt = () => {
+  ElMessageBox.prompt("Please input your name", "Change name", {
+    confirmButtonText: "OK",
+    cancelButtonText: "Cancel",
+    inputPattern: /^[\p{L}\s'-]+$/u,
+    inputErrorMessage: "Invalid name",
+  })
+    .then(({ value }) => {
+      setUserName(value);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
 };
 
 const setUserAvatar = (url: string) => {
@@ -196,6 +207,10 @@ const getCurrentEmail = computed(() => {
   if (auth.currentUser) {
     return auth.currentUser.email;
   }
+});
+
+const getFavoriteGamesAmount = computed(() => {
+  return favoriteGames.getFavoriteIds.length;
 });
 
 const updateUserInfoInCollection = async () => {

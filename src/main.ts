@@ -1,16 +1,13 @@
 import { createApp } from "vue";
+import { initializeFirebase } from './firebase/firebase'
 import { createPinia } from 'pinia'
 import ElementPlus from "element-plus";
-import App from "./App.vue";
-
 import router from "./router/router";
 import toast from "./toast";
+import App from "./App.vue";
 import "./style.css";
 import "./styles/font.css";
 import "element-plus/dist/index.css";
-import { initializeFirebase } from './firebase/firebase'
-
-
 
 const pinia = createPinia()
 

@@ -34,7 +34,7 @@ export const useFavoriteGames = defineStore('favoriteGames', {
             if (favoriteGames.exists()) {
               this.favoriteGamesIds = favoriteGames.data().gamesInLibrary
             } else {
-              console.log('favoriteGames dont not exist')
+              console.log('favoriteGames do not exist')
             }
           }
         },

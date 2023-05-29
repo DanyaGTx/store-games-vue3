@@ -1,16 +1,12 @@
 <template>
   <div>
     <h1 class="text-[30px] text-white">Creators</h1>
-    <div>
-      <div
-        class="mb-[50px] m-[20px]"
-        v-for="creator in creators"
-        :key="creator.id"
-      >
+    <div v-if="!isLoading">
+      <div class="m-[20px]" v-for="creator in creators" :key="creator.id">
         <div class="flex gap-4 max-[720px]:block">
           <div class="w-full max-w-[250px]">
             <img
-              class="w-full min-w-[250px] max-[360px]:min-w-0"
+              class="w-full min-w-[250px] max-[420px]:min-w-0"
               :src="creator.image"
               alt=""
             />
@@ -25,7 +21,7 @@
               </h3>
               <div class="mb-[10px] flex flex-wrap gap-2">
                 <span
-                  class="border-2 border-cyan-50 text-black p-[5px] bg-slate-300"
+                  class="border-2 border-cyan-50 text-black p-[5px] bg-slate-300 text-[14px]"
                   v-for="positions in creator.positions"
                   :key="positions.id"
                   >{{ positions.name }}</span
@@ -46,40 +42,36 @@
         </div>
       </div>
     </div>
+    <div v-else class="absolute left-[50%]">
+      <img class="w-[100px]" src="../assets/loader.gif" alt="" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { api } from "../api/api";
-const creators = ref<CREATOR[]>([]);
-const getCreators = async () => {
-  const { data } = await api.creators.getCreators();
-  creators.value = data.results;
-};
+import { CREATOR } from "../intrerfaces/types";
 
-type CREATOR = {
-  id: number;
-  name: string;
-  image: string;
-  games_count: number;
-  positions: {
-    id: number;
-    name: string;
-  }[];
-  games: {
-    name: string;
-    id: number;
-  }[];
+const creators = ref<CREATOR[]>([]);
+const isLoading = ref(false);
+const getCreators = async () => {
+  try {
+    isLoading.value = true;
+    const { data } = await api.creators.getCreators();
+    creators.value = data.results;
+  } catch (e) {
+    console.log(e);
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 onMounted(async () => {
-  await getCreators();
-  console.log(creators.value);
-
   window.scrollTo({
     top: 0,
   });
+  await getCreators();
 });
 </script>
 

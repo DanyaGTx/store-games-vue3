@@ -53,32 +53,28 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useToast } from "vue-toastification";
 import { ElForm, ElInput, ElButton, ElFormItem } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
-import { toastOptions } from "../toast/toastOptions";
 import {
   getAuth,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import { useToast } from "vue-toastification";
-import router from "../router/router";
 import { doc, getDoc } from "@firebase/firestore";
-import { db } from "../firebase/firebase";
-import { useUserDataStore } from "../stores/userData";
 import createUserCollection from "../firebase/database/createUserCollection";
+import { db } from "../firebase/firebase";
+import router from "../router/router";
+import { toastOptions } from "../toast/toastOptions";
+import { useUserDataStore } from "../stores/userData";
+import { LOGIN } from "../intrerfaces/types";
 const userDataStore = useUserDataStore();
 const ruleFormRef = ref<FormInstance>();
-const auth = getAuth();
 
 const toast = useToast();
-interface Login {
-  email: string;
-  password: string;
-}
 
-const login = ref<Login>({
+const login = ref<LOGIN>({
   email: "",
   password: "",
 });
