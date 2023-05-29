@@ -56,9 +56,15 @@ export interface GAME_DETAILS {
 export interface GAME {
   name: string;
   id: number;
+  rating: number;
+}
+
+export interface GAME_IN_BASKET {
+  name: string;
+  id: number;
+  rating: number;
   website: string,
   released: string,
-  rating: number;
   background_image: string;
   isDeleting: boolean;
 }

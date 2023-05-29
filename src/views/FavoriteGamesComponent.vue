@@ -79,10 +79,10 @@ import { ElMessageBox } from "element-plus";
 import { Delete } from "@element-plus/icons-vue";
 import { api } from "../api/api";
 import { useFavoriteGames } from "../stores/favoriteGames";
-import { GAME } from "../intrerfaces/types";
+import { GAME_IN_BASKET } from "../intrerfaces/types";
 import { toastOptions } from "../toast/toastOptions";
 import "animate.css";
-const favoriteGames = ref<GAME[]>([]);
+const favoriteGames = ref<GAME_IN_BASKET[]>([]);
 const isGamesLoading = ref(true);
 const toast = useToast();
 const favoriteGamesStore = useFavoriteGames();
@@ -107,7 +107,7 @@ const getGamesForLibrary = async () => {
   const gamePromises = favoriteGamesStores.map((id) =>
     api.games.getGameById(id)
   );
-  const games = [] as GAME[];
+  const games = [] as GAME_IN_BASKET[];
   try {
     isGamesLoading.value = true;
     const gameResults = await Promise.all(gamePromises);
