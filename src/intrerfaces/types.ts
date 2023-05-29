@@ -57,9 +57,10 @@ export interface GAME {
   name: string;
   id: number;
   rating: number;
+  background_image: string;
 }
 
-export interface GAME_IN_BASKET {
+export interface GAME_IN_FAVORITE {
   name: string;
   id: number;
   rating: number;
