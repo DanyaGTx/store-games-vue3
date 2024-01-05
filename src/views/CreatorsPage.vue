@@ -6,7 +6,9 @@
         <div class="flex gap-4 max-[720px]:block">
           <div class="w-full max-w-[250px]">
             <img
-              class="w-full min-w-[250px] max-[420px]:min-w-0"
+              @load="imageLoading(creator.image)"
+              class="w-full min-w-[250px] max-[420px]:min-w-0 fade-in-image"
+              :class="imageClass"
               :src="creator.image"
               alt="Creator Image"
             />
@@ -24,8 +26,9 @@
                   class="flex items-center justify-center text-center rounded-md p-2 text-white bg-[#2A2A2A] text-xs max-w-[200px]"
                   v-for="positions in creator.positions"
                   :key="positions.id"
-                  >{{ positions.name }}</span
                 >
+                  {{ positions.name }}
+                </span>
               </div>
               <div class="text-white flex flex-wrap">
                 <p class="mr-1">Games:</p>
@@ -66,6 +69,15 @@ const getCreators = async () => {
   } finally {
     isLoading.value = false;
   }
+};
+
+const imageClass = ref("fade-in-image");
+const imageLoading = (img: string) => {
+  const image = new Image();
+  image.src = img;
+  image.onload = () => {
+    imageClass.value = "fade-in-image is-loaded";
+  };
 };
 
 onMounted(async () => {

@@ -5,7 +5,7 @@
         <router-link class="links__item" to="/favorite">Favourites</router-link>
       </li>
       <li class="hidden text-primary max-[520px]:block">
-        <router-link class="links__item" to="/community">Community</router-link>
+        <router-link class="links__item" to="/creators">Creators</router-link>
       </li>
     </ul>
     <div class="flex items-center gap-10">
