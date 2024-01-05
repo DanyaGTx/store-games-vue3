@@ -1,6 +1,6 @@
 # VideoGames Platform
 
-![StoreGames](https://i.imgur.com/xy1A1hh.png)
+![StoreGames](https://imgur.com/a/I1NEiEg)
 
 Welcome to VideoGames Platform! This project was created to simplify the process of finding games. On this platform you can easily find any game you want and explore it.
 
