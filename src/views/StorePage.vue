@@ -3,7 +3,7 @@
     <h1 class="text-[30px] text-white mb-[20px]">Games</h1>
     <div v-if="!isLoading && !isError">
       <div
-        class="grid gap-4 m-[10px] grid-cols-4 max-[1300px]:grid-cols-3 max-[1100px]:grid-cols-2 max-[750px]:grid-cols-1"
+        class="grid gap-4 m-[10px] grid-cols-6 max-[1300px]:grid-cols-4 max-[850px]:grid-cols-3 max-[650px]:grid-cols-2 max-[480px]:grid-cols-1"
       >
         <game-card
           @click="openCardDetails(game.id)"
@@ -11,6 +11,7 @@
           :key="game.id"
           :game="game"
           :isLoading="isLoading"
+          :isAddGameButtonActive="isAddGameButtonActive"
         >
         </game-card>
       </div>
@@ -20,14 +21,14 @@
           :current-page="currentPage"
           background
           layout="prev, pager, next"
-          :total="10000"
+          :total="maximumPages * 10"
           :small="calculatedSizePagination"
           :pager-count="calculatedSizePagerCount"
         />
       </div>
     </div>
     <div v-else-if="!isError" class="absolute left-[50%]">
-      <img class="w-[100px]" src="../assets/loader.gif" alt="" />
+      <div v-loading="true"></div>
     </div>
   </div>
 </template>
@@ -38,7 +39,6 @@ import { useWindowSize } from "@vueuse/core";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import { ElPagination } from "element-plus";
-import { getAuth } from "@firebase/auth";
 //@ts-ignore
 import debounce from "lodash.debounce";
 import GameCard from "../components/GameCard.vue";
@@ -62,6 +62,9 @@ const props = defineProps<{
 const isLoading = ref(false);
 const isError = ref(false);
 const currentPage = ref(1);
+const gamesPerPage = ref(24);
+const isAddGameButtonActive = ref(true);
+const maximumPages = ref(1000);
 
 const setCurrentPage = (page: number) => {
   isLoading.value = true;
@@ -77,6 +80,15 @@ const openCardDetails = (id: number) => {
     name: "game-details",
     params: { id },
   });
+};
+
+const fetchGamesWithSearch = async (
+  page: number,
+  searchQuery: string,
+  gamesPerPage: number
+) => {
+  await allGamesStore.getGamesBySearch(page, searchQuery, gamesPerPage);
+  isLoading.value = false;
 };
 
 const calculatedSizePagination = computed(() => {
@@ -97,30 +109,32 @@ const calculatedSizePagerCount = computed(() => {
   }
 });
 
-const fetchGamesWithSearch = async (page: number, searchQuery: string) => {
-  await allGamesStore.getGamesBySearch(page, searchQuery);
-  isLoading.value = false;
-};
-
 watch(currentPage, (newPage) => {
-  fetchGamesWithSearch(currentPage.value, props.searchQuery);
+  fetchGamesWithSearch(
+    currentPage.value,
+    props.searchQuery,
+    gamesPerPage.value
+  );
 });
 
 watch(
   () => props.searchQuery,
   debounce(async (searchQuery: string) => {
     setCurrentPage(1);
-    await fetchGamesWithSearch(currentPage.value, searchQuery);
+    await fetchGamesWithSearch(
+      currentPage.value,
+      searchQuery,
+      gamesPerPage.value
+    );
   }, 1000)
 );
 
-const user = getAuth().currentUser;
 onMounted(async () => {
   // setting page from query url
   if (route.query.page) {
-    if (+route.query.page > 1000) {
+    if (+route.query.page > maximumPages.value) {
       toast.warning("Hey, maximum 1000 pages", toastOptions);
-      currentPage.value = 1000;
+      currentPage.value = maximumPages.value + 1;
     } else if (+route.query.page < 1) {
       toast.warning("Wow, what you are trying to find ?)", toastOptions);
       currentPage.value = 1;
@@ -128,17 +142,18 @@ onMounted(async () => {
       currentPage.value = +route.query.page;
     }
   }
-  try {
-    if (user?.email) {
-      console.log(user.email);
-    }
-    isLoading.value = true;
 
-    await fetchGamesWithSearch(currentPage.value, props.searchQuery);
-    isLoading.value = false;
+  try {
+    isLoading.value = true;
+    await fetchGamesWithSearch(
+      currentPage.value,
+      props.searchQuery,
+      gamesPerPage.value
+    );
   } catch (error) {
     isError.value = true;
     toast.error("Error: " + error, toastOptions);
+  } finally {
     isLoading.value = false;
   }
 });

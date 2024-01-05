@@ -1,5 +1,5 @@
 <template>
-  <div class="mr-[10px]">
+  <div class="mx-[10px]">
     <el-dropdown trigger="click">
       <div class="flex items-center relative">
         <img
@@ -7,7 +7,7 @@
           src="../assets/recycle-bin.svg"
         />
         <div
-          :class="{ hidden: !auth.currentUser }"
+          :class="{ hidden: !auth.currentUser || calculatedGamesAmount <= 0 }"
           class="min-w-[25px] h-[25px] rounded-full bg-blue-400 absolute top-[5px] right-[5px] flex justify-center items-center"
         >
           <span class="text-black">{{ calculatedGamesAmount }}</span>
@@ -33,9 +33,10 @@
                   </div>
                   <span
                     @click.stop="deleteGame(game.id)"
-                    class="text-red-900 text-[20px] cursor-pointer"
-                    ><img src="../assets/delete-ico.svg" alt=""
-                  /></span>
+                    class="text-red-900 text-[20px] cursor-pointer min-w-[24px]"
+                  >
+                    <img src="../assets/delete-ico.svg" alt="delete-icon" />
+                  </span>
                 </div>
               </div>
             </template>
@@ -59,8 +60,9 @@
             type="success"
             plain
             @click="addToFavorite"
-            >Add to favourite</el-button
           >
+            Add to favourite
+          </el-button>
         </div>
       </template>
     </el-dropdown>
@@ -75,9 +77,9 @@ import { ElDropdown, ElDropdownMenu } from "element-plus";
 import { getAuth } from "firebase/auth";
 import { collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
+import { useFavoriteGames } from "../stores/favoriteGames";
 import { toastOptions } from "../toast/toastOptions";
 import { useGamesStoreBasket } from "../stores/gamesBasket";
-import { useFavoriteGames } from "../stores/favoriteGames";
 
 const toast = useToast();
 

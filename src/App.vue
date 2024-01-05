@@ -22,7 +22,6 @@ const loadCartGamesFromDatabase = async () => {
 onMounted(async () => {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      console.log("User is logged in", user);
       await favoriteGamesStore.getFavoriteGamesFromDB();
       loadCartGamesFromDatabase();
       if (user.photoURL) {
@@ -39,7 +38,7 @@ onMounted(async () => {
 
 <style>
 body {
-  background-color: #252836;
+  @apply bg-primary;
 }
 ::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */

@@ -1,113 +1,152 @@
 <template>
-  <div class="max-w-[1400px] bg-[#252836] p-4">
-    <div v-if="gameDetails">
-      <el-button @click="goBack" class="mb-[20px]">Back</el-button>
-      <div class="flex gap-3 max-[1200px]:block">
+  <div class="p-4">
+    <div class="text-white" v-if="gameDetails">
+      <h1 class="text-5xl max-[450px]:text-[25px] max-[350px]:text-[20px]">
+        {{ gameDetails.name }}
+      </h1>
+      <div class="flex items-center gap-1">
+        <el-rate v-model="gameDetails.rating" disabled />
+        <p class="text-base">{{ gameDetails.rating }}</p>
+      </div>
+      <div class="flex justify-between gap-16 mt-2 max-[1600px]:block">
+        <div class="swiper__container">
+          <div>
+            <swiper
+              :loop="true"
+              :spaceBetween="10"
+              :navigation="true"
+              :thumbs="{ swiper: thumbsSwiper }"
+              :modules="modules"
+              :initial-slide="gameTrailer.results.length ? 0 : 1"
+            >
+              <swiper-slide v-if="gameTrailer.results.length">
+                <div class="text-center">
+                  <video
+                    :poster="gameTrailer.results[0].preview"
+                    class="w-full text-center m-auto"
+                    controls
+                    autoplay
+                    muted
+                  >
+                    <source
+                      :src="gameTrailer.results[0].data.max"
+                      type="video/mp4"
+                    />
+
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              </swiper-slide>
+
+              <swiper-slide
+                :key="screenshot.id"
+                v-for="screenshot in gameScreenShots"
+              >
+                <div class="animate__animated animate__fadeIn select-none">
+                  <img
+                    class="h-full w-full object-cover"
+                    :src="screenshot.image"
+                    alt=""
+                  />
+                </div>
+              </swiper-slide>
+            </swiper>
+            <swiper
+              @swiper="setThumbsSwiper"
+              :spaceBetween="10"
+              :slidesPerView="4"
+              :watchSlidesProgress="true"
+              :modules="modules"
+              class="mySwiper mt-5"
+            >
+              <swiper-slide v-if="gameTrailer.results.length">
+                <div class="text-center cursor-pointer">
+                  <video
+                    :poster="gameTrailer.results[0].preview"
+                    class="w-full text-center m-auto"
+                    muted
+                  >
+                    <source
+                      :src="gameTrailer.results[0].data.max"
+                      type="video/mp4"
+                    />
+
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              </swiper-slide>
+              <swiper-slide
+                :key="screenshot.id"
+                v-for="screenshot in gameScreenShots"
+              >
+                <div
+                  class="cursor-pointer animate__animated animate__fadeIn select-none"
+                >
+                  <img
+                    class="h-full w-full object-cover"
+                    :src="screenshot.image"
+                    alt=""
+                  />
+                </div>
+              </swiper-slide>
+            </swiper>
+          </div>
+        </div>
         <div>
           <img
-            class="max-w-[480px] h-full max-[1200px]:h-[250px] max-[600px]:h-[200px] w-full object-cover"
+            class="max-w-[280px] select-none rounded-sm max-[1600px]:hidden"
             :src="gameDetails.background_image"
-            alt=""
+            alt="game image"
           />
-        </div>
-
-        <div class="flex flex-col justify-between">
-          <div class="text-white">
-            <h1
-              class="text-[30px] font-bold max-[450px]:text-[25px] max-[350px]:text-[20px]"
+          <div class="grid grid-cols-3 gap-2 max-[1600px]:flex flex-wrap mt-3">
+            <p
+              class="flex items-center justify-center text-center rounded-md p-2 bg-[#2A2A2A] text-xs max-w-[200px]"
+              v-for="genre in gameDetails.genres"
             >
-              {{ gameDetails.name }}
-            </h1>
-            <div class="flex gap-3 flex-wrap max-w-[500px] mt-1">
-              <p
-                class="rounded-[8px] bg-gray-500 p-[5px]"
-                v-for="genre in gameDetails.genres"
-              >
-                {{ genre.name }}
-              </p>
-            </div>
-            <div class="mt-1">
-              <h2 class="text-[20px] font-bold">
-                Rating: {{ gameDetails.rating }}
-              </h2>
+              {{ genre.name }}
+            </p>
+          </div>
 
-              <div class="mt-2">
-                <h3>Release date: {{ gameDetails.released }}</h3>
-                <div class="flex gap-3 flex-wrap">
-                  <h2>Developers:</h2>
-                  <p v-for="developer in gameDetails.developers">
-                    {{ developer.name }}
-                  </p>
-                </div>
-              </div>
-              <div class="flex flex-wrap mt-2 text-white">
-                <h2 class="mr-[5px]">Stores:</h2>
-                <p class="mr-[10px]" v-for="store in gameDetails.stores">
-                  {{ store.store.name }};
+          <div>
+            <ul>
+              <li class="flex justify-between py-3 border-b border-[#2A2A2A]">
+                <p>Release date</p>
+                <p>
+                  {{ gameDetails.released }}
                 </p>
-              </div>
-            </div>
+              </li>
+            </ul>
           </div>
 
-          <div v-if="!isInLibrary" @click.stop>
-            <el-button
-              class="w-full max-w-[300px]"
-              v-if="!isInBasket"
-              @click="addGameToCart"
-              type="success"
-              :disabled="!isAddGameButtonActive && auth.currentUser"
-              >Add to cart</el-button
-            >
-            <el-button
-              class="w-full max-w-[300px]"
-              v-else
-              @click="deleteGameFromCart"
-              type="info"
-              plain
-              >Delete from cart</el-button
-            >
+          <div class="mt-4 max-w-[450px]">
+            <div v-if="!isInLibrary" @click.stop>
+              <el-button
+                class="w-full"
+                v-if="!isInBasket"
+                @click="addGameToCart"
+                type="success"
+                :disabled="isAllowedToAdd"
+                >Add to cart</el-button
+              >
+              <el-button
+                class="w-full max-w-[300px]"
+                v-else
+                @click="deleteGameFromCart"
+                type="info"
+                plain
+                >Delete from cart</el-button
+              >
+            </div>
+            <div v-else class="text-green-500 font-bold">In Library</div>
           </div>
-          <div v-else class="text-green-500 font-bold">In Library</div>
         </div>
       </div>
       <div class="text-white mt-5">
         <p v-html="gameDetails.description"></p>
       </div>
-      <div v-if="gameTrailer.results.length" class="text-center m-auto">
-        <video
-          :poster="gameTrailer.results[0].preview"
-          class="w-full text-center m-auto"
-          controls
-        >
-          <source :src="gameTrailer.results[0].data.max" type="video/mp4" />
-
-          Your browser does not support the video tag.
-        </video>
-      </div>
-      <div v-else class="mt-[50px]">
-        <div
-          v-if="!isScreenShotsLoading"
-          class="grid grid-cols-3 gap-3 max-[1100px]:grid-cols-2 max-[750px]:grid-cols-1"
-        >
-          <div
-            v-for="screenshot in gameScreenShots"
-            :key="screenshot.id"
-            class="max-w-[500px] animate__animated animate__fadeIn"
-          >
-            <img
-              class="h-full w-full object-cover"
-              :src="screenshot.image"
-              alt=""
-            />
-          </div>
-        </div>
-        <div v-else class="absolute left-[50%]">
-          <img class="w-[100px]" src="../assets/loader.gif" alt="" />
-        </div>
-      </div>
     </div>
     <div v-else class="absolute left-[50%]">
-      <img class="w-[100px]" src="../assets/loader.gif" alt="" />
+      <div v-loading="true"></div>
     </div>
   </div>
 </template>
@@ -115,40 +154,50 @@
 <script lang="ts" setup>
 import { onMounted, ref, computed } from "vue";
 import { useRoute } from "vue-router";
-import { getAuth } from "@firebase/auth";
 import { register as SwiperRegister } from "swiper/element/bundle";
 import { useGamesStoreBasket } from "../stores/gamesBasket";
 import { useFavoriteGames } from "../stores/favoriteGames";
 import { GAME_DETAILS, SCREENSHOT } from "../intrerfaces/types";
-import { goBack } from "../utils";
+import { ElRate } from "element-plus";
 import { api } from "../api/api";
 import "animate.css";
+
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { FreeMode, Navigation, Thumbs } from "swiper";
+
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
+
+const thumbsSwiper = ref(null);
+
+const setThumbsSwiper = (swiper: any) => {
+  thumbsSwiper.value = swiper;
+};
+
+const modules = [FreeMode, Navigation, Thumbs];
 
 const favoriteGamesStore = useFavoriteGames();
 const gamesStoreBasket = useGamesStoreBasket();
 
 const route = useRoute();
-const auth = getAuth();
 
 const isAddGameButtonActive = ref(true);
 const isScreenShotsLoading = ref(false);
-const gameTrailer = ref();
 
+const gameTrailer = ref();
 const gameDetails = ref<GAME_DETAILS>();
 const gameScreenShots = ref<SCREENSHOT[]>();
 
 const addGameToCart = () => {
   isAddGameButtonActive.value = false;
-  if (gameDetails.value?.id) {
-    gamesStoreBasket.addGame(gameDetails.value.id);
-  }
+  gamesStoreBasket.addGame(gameDetails.value?.id as number);
 };
 
 const deleteGameFromCart = () => {
   isAddGameButtonActive.value = true;
-  if (gameDetails.value?.id) {
-    gamesStoreBasket.deleteGame(gameDetails.value.id);
-  }
+  gamesStoreBasket.deleteGame(gameDetails.value?.id as number);
 };
 
 const getGameById = async (id: number) => {
@@ -178,16 +227,18 @@ const getGameScreenShots = async (id: number) => {
 };
 
 const isInBasket = computed(() => {
-  isAddGameButtonActive.value = true;
-  return gamesStoreBasket.gamesBasket.find(
-    (game) => game.id === gameDetails.value?.id
-  );
+  return gamesStoreBasket.hasInCart(gameDetails.value?.id as number);
 });
 
 const isInLibrary = computed(() => {
-  isAddGameButtonActive.value = true;
   return favoriteGamesStore.getFavoriteIds.find(
     (id) => id === Number(route.params.id)
+  );
+});
+
+const isAllowedToAdd = computed(() => {
+  return (
+    !gamesStoreBasket.isAddGameButtonActive || !isAddGameButtonActive.value
   );
 });
 
@@ -195,6 +246,7 @@ onMounted(() => {
   window.scrollTo({
     top: 0,
   });
+
   SwiperRegister();
   getGameById(+route.params.id);
   getGameTrailer(+route.params.id);
@@ -202,8 +254,19 @@ onMounted(() => {
 });
 </script>
 
-<style>
+<style lang="scss">
 .swiper-pagination-bullet-active {
   background-color: #000;
+}
+
+.swiper__container {
+  --swiper-navigation-color: #fff;
+  --swiper-pagination-color: #fff;
+
+  max-width: 1200px;
+
+  @media (max-width: 1600px) {
+    max-width: 100%;
+  }
 }
 </style>

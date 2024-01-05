@@ -2,56 +2,45 @@
   <div v-if="getIsLoggedIn">
     <el-dropdown trigger="click">
       <div class="flex items-center el-dropdown-link cursor-pointer">
-        <div class="mr-[10px] min-w-[50px] h-[50px]">
+        <div class="min-w-[50px] h-[50px]">
           <img
             v-if="getCurrentAvatar"
             class="object-cover rounded-[50%] w-[50px] h-[50px]"
             :src="userDataStore.getUserProfileAvatar"
-            alt=""
+            alt="avatar"
           />
-          <img v-else width="50" src="../assets/user.png" alt="" />
+          <img v-else width="50" src="../assets/user.png" alt="avatar" />
         </div>
-
-        <h3 class="text-white">{{ getCurrentUser }}</h3>
-        <el-icon class="el-icon--right">
-          <arrow-down />
-        </el-icon>
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="$router.push({ name: 'profile' })"
-            >Profile</el-dropdown-item
-          >
+          <el-dropdown-item @click="$router.push({ name: 'profile' })">
+            Profile
+          </el-dropdown-item>
           <el-dropdown-item @click="handleSignOut">Logout</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
   </div>
   <div v-else>
-    <h2
+    <button
       @click="$router.push({ name: 'login' })"
-      class="cursor-pointer text-gray-500"
+      class="bg-[#26bbff] transition-colors hover:bg-[#85cdee] py-1 px-5 rounded-xl text-black mr-5"
     >
-      Login
-    </h2>
+      Sign In
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, computed } from "vue";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { ArrowDown } from "@element-plus/icons-vue";
-import {
-  ElDropdown,
-  ElIcon,
-  ElDropdownMenu,
-  ElDropdownItem,
-} from "element-plus";
-import router from "../router/router";
+import { ElDropdown, ElDropdownMenu, ElDropdownItem } from "element-plus";
 import { useToast } from "vue-toastification";
 import { toastOptions } from "../toast/toastOptions";
-
+import router from "../router/router";
 import { useUserDataStore } from "../stores/userData";
+
 const userDataStore = useUserDataStore();
 
 const toast = useToast();
@@ -64,10 +53,6 @@ const handleSignOut = () => {
     router.push({ name: "login" });
   });
 };
-
-const getCurrentUser = computed(() => {
-  return userDataStore.getUserProfileName;
-});
 
 const getCurrentAvatar = computed(() => {
   return userDataStore.getUserProfileAvatar;

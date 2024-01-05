@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="py-5">
     <h1 class="text-[30px] text-white">Creators</h1>
     <div v-if="!isLoading">
       <div class="m-[20px]" v-for="creator in creators" :key="creator.id">
@@ -8,7 +8,7 @@
             <img
               class="w-full min-w-[250px] max-[420px]:min-w-0"
               :src="creator.image"
-              alt=""
+              alt="Creator Image"
             />
           </div>
           <div>
@@ -21,21 +21,21 @@
               </h3>
               <div class="mb-[10px] flex flex-wrap gap-2">
                 <span
-                  class="border-2 border-cyan-50 text-black p-[5px] bg-slate-300 text-[14px]"
+                  class="flex items-center justify-center text-center rounded-md p-2 text-white bg-[#2A2A2A] text-xs max-w-[200px]"
                   v-for="positions in creator.positions"
                   :key="positions.id"
                   >{{ positions.name }}</span
                 >
               </div>
-
               <div class="text-white flex flex-wrap">
-                Games:
+                <p class="mr-1">Games:</p>
                 <span
                   class="mr-[10px]"
                   v-for="game in creator.games"
                   :key="game.id"
-                  >{{ game.name }}.</span
                 >
+                  {{ game.name }}.
+                </span>
               </div>
             </div>
           </div>
@@ -43,7 +43,7 @@
       </div>
     </div>
     <div v-else class="absolute left-[50%]">
-      <img class="w-[100px]" src="../assets/loader.gif" alt="" />
+      <div v-loading="true"></div>
     </div>
   </div>
 </template>
@@ -55,6 +55,7 @@ import { CREATOR } from "../intrerfaces/types";
 
 const creators = ref<CREATOR[]>([]);
 const isLoading = ref(false);
+
 const getCreators = async () => {
   try {
     isLoading.value = true;

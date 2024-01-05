@@ -1,5 +1,5 @@
-import Toast from 'vue-toastification'
-import 'vue-toastification/dist/index.css'
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
 
-const toast = Toast
-export default toast
+const toast = Toast;
+export default toast;

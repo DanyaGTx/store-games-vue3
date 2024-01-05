@@ -1,89 +1,94 @@
-import StoreComponent from "../views/StoreComponent.vue";
-import FavoriteGamesComponent from "../views/FavoriteGamesComponent.vue";
-import MainUIVue from "../views/MainUI.vue";
-import RegisterComponent from "../views/RegisterComponent.vue";
-import LoginComponent from '../views/LoginComponent.vue'
-import ProfileComponent from "../views/ProfileComponent.vue";
+import StorePage from "../views/StorePage.vue";
+import FavoriteGamesPage from "../views/FavoriteGamesPage.vue";
+import MainPage from "../views/MainPage.vue";
+import LoginPage from "../views/LoginPage.vue";
+import ProfilePage from "../views/ProfilePage.vue";
 import GameCardDetails from "../components/GameCardDetails.vue";
-import CreatorsComponent from '../views/CreatorsComponent.vue'
+import CreatorsPage from "../views/CreatorsPage.vue";
 
 export const routeNames = {
-    store: 'store',
-    favorite: 'favorite',
-    news: 'news',
-    login: 'login',
-    register: 'register',
-    profile: 'profile',
-    game_details: 'game-details',
-}
+  store: "store",
+  favorite: "favorite",
+  creators: "creators",
+  login: "login",
+  register: "register",
+  profile: "profile",
+  game_details: "game-details",
+};
 
 export const routes = [
   {
     path: `/store`,
     name: routeNames.store,
     alias: "/",
-    component: MainUIVue,
-    children: [{ path: "", name: "route.store", component: StoreComponent }],
+    component: MainPage,
+    children: [{ path: "", name: "route.store", component: StorePage }],
     redirect: {
-      name: 'route.store'
+      name: "route.store",
+    },
+    meta: {
+      header: 1,
     },
   },
   {
     path: `/favorite`,
     name: routeNames.favorite,
-    component: MainUIVue,
+    component: MainPage,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
     },
-    children: [{ path: "", name: "route.favorite", component: FavoriteGamesComponent }],
+    children: [
+      { path: "", name: "route.favorite", component: FavoriteGamesPage },
+    ],
     redirect: {
-      name: 'route.favorite'
+      name: "route.favorite",
     },
   },
   {
-    path: `/news`,
-    name: routeNames.news,
-    component: MainUIVue,
+    path: `/creators`,
+    name: routeNames.creators,
+    component: MainPage,
     meta: {
-      requiresAuth: false
+      requiresAuth: false,
+      header: 0,
     },
-    children: [{ path: "", name: "route.news", component: CreatorsComponent }],
+    children: [{ path: "", name: "route.news", component: CreatorsPage }],
     redirect: {
-      name: 'route.news'
+      name: "route.news",
     },
   },
   {
     path: `/login`,
     name: routeNames.login,
-    component: LoginComponent,
-  },
-  {
-    path: `/register`,
-    name: routeNames.register,
-    component: RegisterComponent,
+    component: LoginPage,
   },
   {
     path: `/profile`,
     name: routeNames.profile,
-    component: MainUIVue,
+    component: MainPage,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      header: 0,
     },
-    children: [{ path: "", name: "route.profile", component: ProfileComponent }],
+    children: [
+      { path: "", name: "route.profile", component: ProfilePage },
+    ],
     redirect: {
-      name: 'route.profile'
+      name: "route.profile",
     },
   },
   {
     path: `/store/card/:id`,
     name: routeNames.game_details,
-    component: MainUIVue,
+    component: MainPage,
     meta: {
-      requiresAuth: false
+      requiresAuth: false,
     },
-    children: [{ path: "", name: "route.game-details", component: GameCardDetails }],
+    children: [
+      { path: "", name: "route.game-details", component: GameCardDetails },
+    ],
     redirect: {
-      name: 'route.game-details'
+      name: "route.game-details",
     },
   },
-]
+];

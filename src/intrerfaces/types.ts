@@ -45,7 +45,7 @@ export interface GAME_DETAILS {
   name: string;
   released: string;
   developers: DEVELOEPRS[];
-  rating: string;
+  rating: number;
   stores: {
     store: {
       name: string;
@@ -64,8 +64,8 @@ export interface GAME_IN_FAVORITE {
   name: string;
   id: number;
   rating: number;
-  website: string,
-  released: string,
+  website: string;
+  released: string;
   background_image: string;
   isDeleting: boolean;
 }

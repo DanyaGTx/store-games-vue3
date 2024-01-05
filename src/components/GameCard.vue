@@ -1,51 +1,66 @@
 <template>
-  <div
-    class="min-w-[180px] max-w-[280px] max-[1100px]:max-w-[380px] max-[750px]:min-h-[350px] min-h-[350px] bg-[#49537d] rounded-lg flex flex-col justify-between cursor-pointer max-[500px]:h-[300px]"
-  >
-    <div class="p-[10px]">
-      <div class="h-[200px] w-full">
-        <img
-          @load="imageLoading(game.background_image)"
-          class="w-full h-full object-cover rounded-lg fade-in-image"
-          :class="imageClass"
-          :src="game.background_image"
-          alt=""
-        />
-        <h3
-          class="text-[18px] text-white max-[750px]:text-[30px] max-[500px]:text-[24px]"
+  <div class="game-card relative max-w-[215px] max-[480px]:max-w-full">
+    <div class="cursor-pointer hover:contrast-125">
+      <img
+        @load="imageLoading(game.background_image)"
+        class="game-card__img h-[290px] w-full object-cover rounded-sm fade-in-image"
+        :class="imageClass"
+        :src="game.background_image"
+      />
+      <h3 class="text-[18px] mt-1 text-white">
+        {{ game.name }}
+      </h3>
+      <p v-if="isInLibrary" class="text-green-500 font-bold">In Library</p>
+
+      <div
+        v-if="!isInLibrary"
+        class="absolute top-2 right-2 select-none max-[768px]:hidden"
+      >
+        <div
+          v-if="
+            gamesStoreBasket.isAddGameButtonActive &&
+            !isInBasket &&
+            isAddGameButtonActive
+          "
+          @click.stop="addGameToCart(game.id)"
+          class="addToCart-icon h-7 w-7 rounded-full text-2xl bg-black text-white relative border-2"
         >
-          {{ game.name }}
-        </h3>
-        <span
-          class="text-gray-200 text-[16px] max-[750px]:text-[24px] max-[500px]:text-[16px]"
-          >Rating: {{ game.rating }}</span
-        >
+          <span class="addToCart-icon__plus">+</span>
+        </div>
+        <div v-else-if="gamesStoreBasket.isAddGameButtonActive">
+          <img width="30" src="../assets/recycle-bin.svg" alt="In cart" />
+        </div>
       </div>
     </div>
-    <div v-if="!isInLibrary" @click.stop class="text-right m-[20px]">
-      <el-button
-        v-if="!isInBasket"
-        @click="addGameToCart(game.id)"
-        type="success"
-        :disabled="!isAddGameButtonActive && auth.currentUser"
-        >Add to cart</el-button
+    <div class="hidden max-[768px]:block">
+      <div
+        v-if="!isInLibrary && gamesStoreBasket.isAddGameButtonActive"
+        @click.stop
+        class="mt-2"
       >
-      <el-button v-else @click="deleteGameFromCart(game.id)" type="info" plain
-        >Delete from cart</el-button
-      >
-    </div>
-    <div
-      v-else
-      class="text-right m-[20px] text-green-500 font-bold max-[750px]:text-[24px] max-[500px]:text-[20px]"
-    >
-      In Library
+        <el-button
+          v-if="!isInBasket"
+          @click="addGameToCart(game.id)"
+          type="success"
+          :disabled="!isAddGameButtonActive"
+        >
+          Add to cart
+        </el-button>
+        <el-button
+          v-else
+          @click="deleteGameFromCart(game.id)"
+          type="info"
+          plain
+        >
+          Delete from cart
+        </el-button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { getAuth } from "@firebase/auth";
+import { computed, onMounted, ref } from "vue";
 import { useFavoriteGames } from "../stores/favoriteGames";
 import { useGamesStoreBasket } from "../stores/gamesBasket";
 import { GAME } from "../intrerfaces/types";
@@ -54,11 +69,10 @@ const favoriteGamesStore = useFavoriteGames();
 
 const isAddGameButtonActive = ref(true);
 
-const auth = getAuth();
-
 const props = defineProps<{
   game: GAME;
   isLoading: boolean;
+  isAddGameButtonActive: boolean;
 }>();
 
 const gamesStoreBasket = useGamesStoreBasket();
@@ -83,17 +97,15 @@ const imageLoading = (img: string) => {
 };
 
 const isInBasket = computed(() => {
-  isAddGameButtonActive.value = true;
-  return gamesStoreBasket.gamesBasket.find((game) => game.id === props.game.id);
+  return gamesStoreBasket.hasInCart(props.game.id);
 });
 
 const isInLibrary = computed(() => {
-  isAddGameButtonActive.value = true;
   return favoriteGamesStore.getFavoriteIds.find((id) => id === props.game.id);
 });
 </script>
 
-<style scoped>
+<style lang="scss">
 .fade-in-image {
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
@@ -101,5 +113,26 @@ const isInLibrary = computed(() => {
 
 .fade-in-image.is-loaded {
   opacity: 1;
+}
+
+.game-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.game-card:hover .addToCart-icon {
+  display: block;
+}
+
+.addToCart-icon {
+  display: none;
+}
+
+.addToCart-icon__plus {
+  position: absolute;
+  top: calc(50% - 1px);
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

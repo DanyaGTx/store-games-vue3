@@ -6,14 +6,13 @@ import { getAuth } from "firebase/auth";
 const createUserCollection = async () => {
   const userDataStore = useUserDataStore();
   const usersRef = collection(db, "users");
-  const auth = getAuth()
-  if(auth.currentUser?.email) {
+  const auth = getAuth();
+  if (auth.currentUser?.email) {
     await setDoc(
-        doc(usersRef, auth.currentUser?.email),
-        userFields.setup().userFields
-      );
+      doc(usersRef, auth.currentUser?.email),
+      userFields.setup().userFields
+    );
   }
-
 };
 
 export default createUserCollection;
