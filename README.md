@@ -1,18 +1,76 @@
-# Vue 3 + TypeScript + Vite
+# VideoGames Platform
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+![StoreGames](https://i.imgur.com/xy1A1hh.png)
 
-## Recommended IDE Setup
+Welcome to VideoGames Platform! This project was created to simplify the process of finding games. On this platform you can easily find any game you want and explore it.
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## Table of Contents
+- [VideoGames Platform](#videogames-platform)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+    - [Effortless Search](#effortless-search)
+    - [Easy Registration](#easy-registration)
+    - [Updating Information](#updating-information)
+  - [Getting Started](#getting-started)
+      - [Cloning project](#cloning-project)
+      - [Install dependencies](#install-dependencies)
+    - [To run local dev server:](#to-run-local-dev-server)
+    - [To build:](#to-build)
+    - [To lint:](#to-lint)
+  - [Technologies](#technologies)
+  - [Usage](#usage)
 
-## Type Support For `.vue` Imports in TS
+## Features
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+### Effortless Search
+VideGames Playform offers a user-friendly interface for quickly searching games within huge API with video-games. 
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+### Easy Registration
+1. **Sign In / Sign Up**: You can create many accounts and then login to them
+2. **Authorization with Google**: You can login with google.
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+### Updating Information
+1. **Edit name**: You can easily edit your name.
+2. **Upload avatar**: You can have an opportunity to upload your own avatar.
+
+
+## Getting Started
+Follow these steps to get started with StackExchange Searcher.
+
+#### Cloning project
+1. Clone the repository: `https://github.com/DanyaGTx/store-games-vue3.git`
+2. Navigate to the project directory: `cd store-games-vue3`
+
+#### Install dependencies
+
+```
+npm install
+```
+
+### To run local dev server:
+
+```
+npm run dev
+```
+
+### To build:
+
+```
+npm run build
+```
+
+## Technologies
+- Vue 3 + TS + Vite
+- Pinia
+- Firebase
+- Vue Router
+- Axios
+- Tailwind CSS
+- Element Plus
+- Swiper
+
+## Usage
+1. Open VideoGames Platform with npm run dev.
+2. Enter the name of your favourite game in the search bar.
+3. Browse through the search results and find your game.
+4. Add it to the cart and then to the library.
