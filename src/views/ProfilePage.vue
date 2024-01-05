@@ -8,8 +8,7 @@
         <div
           @mouseover="isImageChoosable = true"
           @mouseleave="isImageChoosable = false"
-          class="min-w-[200px] h-[200px] relative fade-in-image"
-          :class="imageClass"
+          class="min-w-[200px] h-[200px] relative"
         >
           <img
             width="200"
@@ -17,15 +16,17 @@
             src="../assets/user.png"
             alt="avatar"
           />
-          <img
-            v-else
-            @load="imageLoading(userDataStore.getUserProfileAvatar)"
-            class="rounded-[50%] transition-all ease-in-out delay-50 border-4 border-red-100 object-cover"
-            :class="{ 'blur-[2px]': isImageChoosable }"
-            :src="userDataStore.getUserProfileAvatar"
-            width="200"
-            alt="avatar"
-          />
+          <div v-else :class="imageClass" class="fade-in-image">
+            <img
+              @load="imageLoading(userDataStore.getUserProfileAvatar)"
+              class="rounded-[50%] transition-all ease-in-out delay-50 border-4 border-red-100 object-cover"
+              :class="{ 'blur-[2px]': isImageChoosable }"
+              :src="userDataStore.getUserProfileAvatar"
+              width="200"
+              alt="avatar"
+            />
+          </div>
+
           <div>
             <label
               for="files"
